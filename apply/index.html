@@ -1110,10 +1110,11 @@
       function validateStep(stepNum) {
         const panel = document.querySelector('.step-panel[data-step="' + stepNum + '"]');
         if (!panel) return false;
-        const inputs = panel.querySelectorAll("input[required], select[required], textarea[required]");
-        for (const el of inputs) {
-          if (el.disabled) continue;
+        const controls = panel.querySelectorAll("input, select, textarea");
+        for (const el of controls) {
+          if (el.disabled || el.type === "hidden" || el.type === "file") continue;
           if (!el.checkValidity()) {
+            showStep(stepNum, false);
             el.reportValidity();
             return false;
           }
@@ -1177,13 +1178,20 @@
 
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        if (!validateStep(5)) return;
-
         const btn = document.getElementById("submitBtn");
         const err = document.getElementById("formError");
+        err.style.display = "none";
+
+        for (let s = 1; s <= 5; s++) {
+          if (!validateStep(s)) {
+            err.textContent = "Please check Step " + s + " for any missing or invalid fields (such as email format).";
+            err.style.display = "block";
+            return;
+          }
+        }
+
         btn.disabled = true;
         btn.textContent = "Submitting...";
-        err.style.display = "none";
 
         try {
           const formData = new FormData(form);
