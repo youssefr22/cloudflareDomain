@@ -8,14 +8,12 @@
   <style>
     :root {
       --primary: #1d4ed8;
-      --primary-hover: #1e40af;
       --bg: #f3f4f6;
       --card: #ffffff;
       --text: #111827;
       --muted: #6b7280;
       --border: #e5e7eb;
       --danger: #dc2626;
-      --success: #059669;
     }
 
     * { box-sizing: border-box; }
@@ -47,6 +45,10 @@
       color: var(--primary);
       text-decoration: none;
     }
+    .user-badge {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
 
     .container {
       max-width: 1020px;
@@ -63,29 +65,6 @@
       margin-bottom: 18px;
     }
 
-    .login-box {
-      max-width: 420px;
-      margin: 60px auto;
-    }
-    .login-box h1 {
-      margin: 0 0 8px;
-      font-size: 1.35rem;
-    }
-    .login-box p {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-    }
-
     button, .btn {
       display: inline-block;
       padding: 9px 16px;
@@ -96,11 +75,6 @@
       border: none;
       text-decoration: none;
     }
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-    .btn-primary:hover { background: var(--primary-hover); }
     .btn-secondary {
       background: #e5e7eb;
       color: #374151;
@@ -114,13 +88,6 @@
       background: #fef2f2;
       color: var(--danger);
       border: 1px solid #fecaca;
-    }
-
-    .error-msg {
-      color: var(--danger);
-      font-size: 0.86rem;
-      margin-top: 8px;
-      display: none;
     }
 
     .app-header {
@@ -208,7 +175,7 @@
     }
 
     @media print {
-      .topbar, .actions, .btn-danger, #loginView, #toolbar { display: none !important; }
+      .topbar, .actions, .btn-danger { display: none !important; }
       body { background: #fff; }
       .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
     }
@@ -219,43 +186,24 @@
   <header class="topbar">
     <div class="topbar-inner">
       <a href="/" class="brand">Yoabra Admin</a>
-      <div id="toolbar" style="display:none; gap:8px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="user-badge" id="userBadge"></span>
         <button type="button" class="btn-secondary" id="refreshBtn">Refresh</button>
-        <button type="button" class="btn-secondary" id="logoutBtn">Lock</button>
+        <a href="/cdn-cgi/access/logout" class="btn btn-secondary">Sign Out</a>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <!-- Login Prompt -->
-    <section class="card login-box" id="loginView">
-      <h1>Landlord Portal</h1>
-      <p>Enter your admin access key to view submitted applications and attachments for 431 Raritan Street.</p>
-      <form id="loginForm">
-        <input type="password" id="adminKeyInput" placeholder="Admin Access Key" required />
-        <button type="submit" class="btn-primary" style="width:100%;">Unlock Applications</button>
-      </form>
-      <div class="error-msg" id="loginError"></div>
-    </section>
-
-    <!-- Applications List -->
-    <section id="dashboardView" style="display:none;">
-      <div id="appsContainer"></div>
-    </section>
+    <div id="appsContainer">
+      <div class="card"><p style="margin:0; color:var(--muted);">Loading applications...</p></div>
+    </div>
   </main>
 
   <script>
     (function () {
-      const SESSION_KEY = "yoabra_admin_key";
-      const loginView = document.getElementById("loginView");
-      const dashboardView = document.getElementById("dashboardView");
-      const toolbar = document.getElementById("toolbar");
       const appsContainer = document.getElementById("appsContainer");
-      const loginError = document.getElementById("loginError");
-
-      function getKey() {
-        return sessionStorage.getItem(SESSION_KEY) || "";
-      }
+      const userBadge = document.getElementById("userBadge");
 
       function escapeHtml(val) {
         return String(val ?? "")
@@ -306,21 +254,15 @@
         return html;
       }
 
-      async function loadApplications(key) {
-        loginError.style.display = "none";
+      async function loadApplications() {
         try {
-          const res = await fetch("/api/admin", {
-            headers: { "X-Admin-Key": key }
-          });
+          const res = await fetch("/api/admin", { credentials: "same-origin" });
           const data = await res.json();
           if (!res.ok || !data.ok) {
-            throw new Error(data.error || "Invalid admin key.");
+            throw new Error(data.error || "Unable to load applications.");
           }
 
-          sessionStorage.setItem(SESSION_KEY, key);
-          loginView.style.display = "none";
-          dashboardView.style.display = "block";
-          toolbar.style.display = "flex";
+          if (data.user) userBadge.textContent = data.user;
 
           if (!data.applications || data.applications.length === 0) {
             appsContainer.innerHTML = `<div class="card"><p style="margin:0; color:var(--muted);">No applications submitted yet.</p></div>`;
@@ -336,7 +278,7 @@
               const label = fk.includes("/pay-stubs/") ? "View Pay Stub / Income Proof" :
                             fk.includes("/vouchers/") ? "View Voucher Documentation" :
                             "View Attachment";
-              const href = `/api/admin?download=${encodeURIComponent(fk)}&key=${encodeURIComponent(key)}`;
+              const href = `/api/admin?download=${encodeURIComponent(fk)}`;
               return `<a class="btn btn-outline" href="${href}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
             }).join("");
 
@@ -379,32 +321,11 @@
             `;
           }).join("");
         } catch (err) {
-          sessionStorage.removeItem(SESSION_KEY);
-          loginView.style.display = "block";
-          dashboardView.style.display = "none";
-          toolbar.style.display = "none";
-          loginError.textContent = err.message;
-          loginError.style.display = "block";
+          appsContainer.innerHTML = `<div class="card"><p style="margin:0; color:var(--danger);">${escapeHtml(err.message)}</p></div>`;
         }
       }
 
-      document.getElementById("loginForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        const key = document.getElementById("adminKeyInput").value.trim();
-        if (key) loadApplications(key);
-      });
-
-      document.getElementById("refreshBtn").addEventListener("click", function () {
-        loadApplications(getKey());
-      });
-
-      document.getElementById("logoutBtn").addEventListener("click", function () {
-        sessionStorage.removeItem(SESSION_KEY);
-        document.getElementById("adminKeyInput").value = "";
-        dashboardView.style.display = "none";
-        toolbar.style.display = "none";
-        loginView.style.display = "block";
-      });
+      document.getElementById("refreshBtn").addEventListener("click", loadApplications);
 
       appsContainer.addEventListener("click", async function (e) {
         const delBtn = e.target.closest(".delete-app-btn");
@@ -416,10 +337,10 @@
         delBtn.textContent = "Deleting...";
         const res = await fetch(`/api/admin?id=${encodeURIComponent(id)}`, {
           method: "DELETE",
-          headers: { "X-Admin-Key": getKey() }
+          credentials: "same-origin"
         });
         if (res.ok) {
-          loadApplications(getKey());
+          loadApplications();
         } else {
           alert("Could not delete application.");
           delBtn.disabled = false;
@@ -427,8 +348,7 @@
         }
       });
 
-      const saved = getKey();
-      if (saved) loadApplications(saved);
+      loadApplications();
     })();
   </script>
 </body>
