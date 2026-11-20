@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rental Application — 431 Raritan Street, Camden, NJ</title>
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --primary-hover: #1e40af;
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #d1d5db;
+      --danger: #dc2626;
+      --success: #059669;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .topbar {
+      background: var(--card);
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 24px;
+    }
+    .topbar-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .property-badge {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 28px auto 60px;
+      padding: 0 16px;
+    }
+
+    /* Property Summary Banner */
+    .summary-card {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .summary-card h1 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+    }
+    .summary-meta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .terms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
+    }
+    .terms-grid div strong {
+      display: block;
+      color: var(--text);
+    }
+
+    /* Progress Bar (TurboTenant Style) */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 6px;
+    }
+    .step-pill {
+      flex: 1;
+      text-align: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      padding-bottom: 8px;
+      border-bottom: 3px solid #d1d5db;
+      transition: all 0.2s;
+    }
+    .step-pill.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .step-pill.done {
+      color: var(--success);
+      border-bottom-color: var(--success);
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 28px 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+    }
+    .step-desc {
+      margin: 0 0 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 620px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .req { color: var(--danger); }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: #fff;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+    }
+
+    .sub-box {
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .sub-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .radio-row, .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+    .radio-row input, .check-row input {
+      margin-top: 4px;
+      width: 16px;
+      height: 16px;
+    }
+
+    .notice-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid #e5e7eb;
+      gap: 12px;
+    }
+    button {
+      padding: 11px 20px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      margin-left: auto;
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+    .btn-outline {
+      background: #fff;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 7px 14px;
+      font-size: 0.85rem;
+    }
+    .btn-remove {
+      background: none;
+      color: var(--danger);
+      padding: 2px 6px;
+      font-size: 0.82rem;
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.88rem;
+      margin-top: 10px;
+      display: none;
+    }
+    .success-screen {
+      text-align: center;
+      padding: 32px 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="/" class="brand">Yoabra Rentals</a>
+      <span class="property-badge">Online Rental Application • $0 Pre-Screening Fee</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Property Overview Card -->
+    <section class="summary-card">
+      <h1>431 Raritan Street, Camden, NJ 08105</h1>
+      <div class="summary-meta">
+        Landlord / Owner: <strong>[YOUR NAME / LLC]</strong> &nbsp;|&nbsp; Contact: <strong>[YOUR CONTACT EMAIL / PHONE]</strong>
+      </div>
+      <div class="terms-grid">
+        <div><strong>Monthly Rent</strong>$1,700 (due on the 1st)</div>
+        <div><strong>Lease Term</strong>12 Months (Residential Only)</div>
+        <div><strong>Security Deposit</strong>$2,550 (1.5x rent, due at lease signing)</div>
+        <div><strong>Utilities</strong>Tenant pays water, electric &amp; gas</div>
+        <div><strong>Pets &amp; Smoking</strong>Not permitted</div>
+        <div><strong>Renter's Insurance</strong>Required before move-in</div>
+      </div>
+    </section>
+
+    <!-- Multi-Step Progress -->
+    <div class="stepper" id="stepper">
+      <div class="step-pill active" data-step="1">1. Applicant</div>
+      <div class="step-pill" data-step="2">2. Household</div>
+      <div class="step-pill" data-step="3">3. Residences</div>
+      <div class="step-pill" data-step="4">4. Income</div>
+      <div class="step-pill" data-step="5">5. Background &amp; Sign</div>
+    </div>
+
+    <div class="form-card">
+      <form id="rentalForm" action="https://api.web3forms.com/submit" method="POST">
+        <!-- Web3Forms Config -->
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
+        <input type="hidden" name="subject" value="New Rental Application — 431 Raritan St, Camden NJ" />
+        <input type="hidden" name="from_name" value="Yoabra Rental Portal" />
+        <input type="checkbox" name="botcheck" style="display:none;" />
+
+        <!-- STEP 1: APPLICANT & MOVE-IN -->
+        <div class="step-panel active" data-step="1">
+          <h2>Applicant &amp; Move-In Details</h2>
+          <p class="step-desc">Each adult (18+) who will reside at the property must submit a separate application.</p>
+
+          <div class="notice-box">
+            <strong>Equal Housing &amp; NJ Fair Chance Policy:</strong> All applicants are evaluated using the same written criteria without discrimination based on race, creed, color, national origin, ancestry, age, marital or familial status, sex, gender identity or expression, sexual orientation, disability, or lawful source of income (including Housing Choice Vouchers / Section 8, SRAP, or TRA). Criminal history is never considered at this stage and is reviewed only after a conditional offer as permitted by New Jersey law.
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>Desired Move-In Date <span class="req">*</span></label>
+              <input type="date" name="Desired_Move_In_Date" required />
+            </div>
+            <div class="field">
+              <label>Intended Use of Premises <span class="req">*</span></label>
+              <select name="Intended_Use" required>
+                <option value="Residential Only">Residential Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>Full Legal Name <span class="req">*</span></label>
+              <input type="text" name="Applicant_Full_Name" required />
+            </div>
+            <div class="field">
+              <label>Other Names / Aliases Used (if any)</label>
+              <input type="text" name="Other_Names_Used" />
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="field">
+              <label>Date of Birth <span class="req">*</span></label>
+              <input type="date" name="Date_of_Birth" required />
+            </div>
+            <div class="field">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" name="Phone" required />
+            </div>
+            <div class="field">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" name="Email" required />
+            </div>
+          </div>
+
+          <div class="check-row" style="margin-top:8px;">
+            <input type="checkbox" id="idConfirm" name="Valid_Photo_ID_Confirmed" value="Yes" required />
+            <label for="idConfirm" style="font-weight:400;">
+              I confirm I possess a valid government-issued photo ID and understand that ID verification and SSN-based screening will be completed securely via TransUnion SmartMove only if selected as a finalist. <span class="req">*</span>
+            </label>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-primary" onclick="nextStep(1)">Next: Household &amp; Vehicles &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: OTHER OCCUPANTS & VEHICLES -->
+        <div class="step-panel" data-step="2">
+          <h2>Other Occupants &amp; Vehicles</h2>
+          <p class="step-desc">List all other adults (co-applicants) and minor children who will live in the home.</p>
+
+          <div id="occupantsContainer"></div>
+          <button type="button" class="btn-outline" onclick="addOccupant()">+ Add Co-Applicant / Occupant</button>
+
+          <hr style="border:none; border-top:1px solid #e5e7eb; margin:22px 0;" />
+
+          <h3 style="font-size:1.05rem; margin:0 0 6px;">Vehicles (Optional)</h3>
+          <p class="step-desc" style="margin-bottom:12px;">Include make, model, color, state, and license plate for any vehicle parked at the property.</p>
+          <div id="vehiclesContainer"></div>
+          <button type="button" class="btn-outline" onclick="addVehicle()">+ Add Vehicle</button>
+
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" onclick="prevStep(2)">&larr; Back</button>
+            <button type="button" class="btn-primary" onclick="nextStep(2)">Next: Residence History &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: 3-YEAR RESIDENCE HISTORY -->
+        <div class="step-panel" data-step="3">
+          <h2>Residence History (Past 3 Years)</h2>
+          <p class="step-desc">Please provide at least 3 full years of residential address history.</p>
+
+          <div class="sub-box">
+            <div class="sub-box-header">Current Residence</div>
+            <div class="field">
+              <label>Street Address <span class="req">*</span></label>
+              <input type="text" name="Current_Address" required />
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>City <span class="req">*</span></label>
+                <input type="text" name="Current_City" required />
+              </div>
+              <div class="field">
+                <label>State <span class="req">*</span></label>
+                <input type="text" name="Current_State" required />
+              </div>
+              <div class="field">
+                <label>ZIP Code <span class="req">*</span></label>
+                <input type="text" name="Current_ZIP" required />
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Move-In Date <span class="req">*</span></label>
+                <input type="date" name="Current_Move_In_Date" required />
+              </div>
+              <div class="field">
+                <label>Lease Expiration Date</label>
+                <input type="date" name="Current_Lease_Expiration" />
+              </div>
+              <div class="field">
+                <label>Monthly Rent / Payment ($) <span class="req">*</span></label>
+                <input type="number" name="Current_Monthly_Rent" required />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Landlord / Property Manager Name <span class="req">*</span></label>
+                <input type="text" name="Current_Landlord_Name" required />
+              </div>
+              <div class="field">
+                <label>Landlord Phone &amp; Email <span class="req">*</span></label>
+                <input type="text" name="Current_Landlord_Contact" required />
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Reason for Leaving <span class="req">*</span></label>
+              <input type="text" name="Current_Reason_For_Leaving" required />
+            </div>
+          </div>
+
+          <div id="prevResidencesContainer"></div>
+          <button type="button" class="btn-outline" onclick="addResidence()">+ Add Previous Address (to cover 3 years)</button>
+
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" onclick="prevStep(3)">&larr; Back</button>
+            <button type="button" class="btn-primary" onclick="nextStep(3)">Next: Employment &amp; Income &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: EMPLOYMENT, INCOME & REFERENCES -->
+        <div class="step-panel" data-step="4">
+          <h2>Employment, Income &amp; References</h2>
+          <p class="step-desc">Include all sources of lawful income or housing assistance you want considered.</p>
+
+          <div class="sub-box">
+            <div class="sub-box-header">Current Employment</div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Employment Status <span class="req">*</span></label>
+                <select name="Employment_Status" required>
+                  <option value="Full-Time Employed">Full-Time Employed</option>
+                  <option value="Part-Time Employed">Part-Time Employed</option>
+                  <option value="Self-Employed">Self-Employed</option>
+                  <option value="Retired / Benefits / Assistance">Retired / Benefits / Assistance</option>
+                  <option value="Student">Student</option>
+                  <option value="Unemployed">Unemployed</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Employer / Business Name</label>
+                <input type="text" name="Current_Employer" />
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Occupation / Job Title</label>
+                <input type="text" name="Job_Title" />
+              </div>
+              <div class="field">
+                <label>Start Date</label>
+                <input type="date" name="Employment_Start_Date" />
+              </div>
+              <div class="field">
+                <label>Gross Monthly Pay ($)</label>
+                <input type="number" name="Gross_Monthly_Pay" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Employer Address</label>
+                <input type="text" name="Employer_Address" />
+              </div>
+              <div class="field">
+                <label>Supervisor Name, Phone &amp; Email</label>
+                <input type="text" name="Supervisor_Contact" />
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-box">
+            <div class="sub-box-header">Previous Employer (if less than 2 years at current)</div>
+            <div class="grid-3">
+              <div class="field" style="margin-bottom:0;">
+                <label>Previous Employer Name</label>
+                <input type="text" name="Prev_Employer" />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Dates Employed</label>
+                <input type="text" name="Prev_Employer_Dates" placeholder="e.g., Jan 2023 – Mar 2025" />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Phone / Email</label>
+                <input type="text" name="Prev_Employer_Contact" />
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-box">
+            <div class="sub-box-header">Monthly Income &amp; Assistance Breakdown</div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Wages / Salary ($/mo)</label>
+                <input type="number" name="Income_Wages" value="0" />
+              </div>
+              <div class="field">
+                <label>Self-Employment ($/mo)</label>
+                <input type="number" name="Income_Self_Employment" value="0" />
+              </div>
+              <div class="field">
+                <label>Social Security / SSI / SSDI ($/mo)</label>
+                <input type="number" name="Income_Social_Security" value="0" />
+              </div>
+              <div class="field">
+                <label>Child Support / Alimony / Benefits ($/mo)</label>
+                <input type="number" name="Income_Other_Benefits" value="0" />
+              </div>
+              <div class="field">
+                <label>Housing Voucher / Rental Assistance ($/mo)</label>
+                <input type="number" name="Income_Housing_Voucher" value="0" />
+              </div>
+              <div class="field">
+                <label>Total Combined Monthly Income ($) <span class="req">*</span></label>
+                <input type="number" name="Total_Monthly_Income" required />
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Voucher / Assistance Program &amp; Caseworker Contact (if applicable)</label>
+              <input type="text" name="Voucher_Details" placeholder="e.g., Section 8 / SRAP / TRA — Caseworker name, phone, email" />
+            </div>
+          </div>
+
+          <div class="sub-box">
+            <div class="sub-box-header">Banking (Optional — Do NOT enter account numbers)</div>
+            <div class="grid-2">
+              <div class="field" style="margin-bottom:0;">
+                <label>Bank Name</label>
+                <input type="text" name="Bank_Name" />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Account Type</label>
+                <select name="Bank_Account_Type">
+                  <option value="">Select...</option>
+                  <option value="Checking">Checking</option>
+                  <option value="Savings">Savings</option>
+                  <option value="Checking & Savings">Checking &amp; Savings</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-box">
+            <div class="sub-box-header">References &amp; Emergency Contact</div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Personal Reference 1 (Non-Relative) <span class="req">*</span></label>
+                <input type="text" name="Ref1_Name_Relation" placeholder="Name & Relationship" required />
+              </div>
+              <div class="field">
+                <label>Ref 1 Phone &amp; Email <span class="req">*</span></label>
+                <input type="text" name="Ref1_Contact" required />
+              </div>
+              <div class="field">
+                <label>Personal Reference 2 (Non-Relative) <span class="req">*</span></label>
+                <input type="text" name="Ref2_Name_Relation" placeholder="Name & Relationship" required />
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Ref 2 Phone &amp; Email <span class="req">*</span></label>
+                <input type="text" name="Ref2_Contact" required />
+              </div>
+              <div class="field">
+                <label>Personal Reference 3 (Non-Relative) <span class="req">*</span></label>
+                <input type="text" name="Ref3_Name_Relation" placeholder="Name & Relationship" required />
+              </div>
+              <div class="field">
+                <label>Ref 3 Phone &amp; Email <span class="req">*</span></label>
+                <input type="text" name="Ref3_Contact" required />
+              </div>
+            </div>
+            <div class="grid-2" style="margin-top:8px;">
+              <div class="field" style="margin-bottom:0;">
+                <label>Emergency Contact Name &amp; Relationship <span class="req">*</span></label>
+                <input type="text" name="Emergency_Contact_Name_Relation" required />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Emergency Contact Phone &amp; Email <span class="req">*</span></label>
+                <input type="text" name="Emergency_Contact_Info" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" onclick="prevStep(4)">&larr; Back</button>
+            <button type="button" class="btn-primary" onclick="nextStep(4)">Next: Disclosures &amp; Sign &rarr;</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: SCREENING QUESTIONS & AUTHORIZATION -->
+        <div class="step-panel" data-step="5">
+          <h2>Rental History Questions &amp; Authorization</h2>
+          <p class="step-desc">Answer truthfully. A "Yes" answer does not automatically disqualify you and may be explained below.</p>
+
+          <div class="sub-box">
+            <div class="field">
+              <label>1. Have you ever been evicted or asked to move out of a rental property? <span class="req">*</span></label>
+              <select name="Q_Evicted" required>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>2. Have you ever broken a lease or left owing rent? <span class="req">*</span></label>
+              <select name="Q_Broken_Lease_Or_Owed_Rent" required>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>3. Have you ever been sued by a landlord for unpaid rent or property damages? <span class="req">*</span></label>
+              <select name="Q_Sued_By_Landlord" required>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>4. Have you filed for bankruptcy in the past 7 years? <span class="req">*</span></label>
+              <select name="Q_Bankruptcy_7_Years" required>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Explanation for any "Yes" answer above (if applicable)</label>
+              <textarea name="Rental_History_Explanation" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="sub-box" style="font-size:0.86rem;">
+            <p style="margin-top:0;"><strong>Applicant Certification &amp; Terms:</strong></p>
+            <ul style="padding-left:18px; margin-bottom:12px;">
+              <li><strong>Accuracy:</strong> I certify that all information provided is true and complete. Materially false or incomplete statements may be grounds for denial or lease termination.</li>
+              <li><strong>Verification &amp; Screening:</strong> I authorize the landlord to verify my employment, income, rental history, and references. If invited to proceed to credit and eviction screening, I understand I will receive a secure link from TransUnion SmartMove (where I will enter my SSN directly and pay the screening fee, capped at $50 under New Jersey law).</li>
+              <li><strong>No Fee for This Pre-Application:</strong> Submitting this online pre-application is free ($0).</li>
+              <li><strong>Right to Accept/Reject &amp; No Possession Until Executed:</strong> Submitting this application does not create a lease or reserve the property. The landlord reserves the right to accept or reject applications in accordance with written screening criteria and applicable law. Possession of the premises will not be granted until the application is approved, a written lease is signed by all parties, and the first month's rent ($1,700) plus the full security deposit ($2,550, held in an interest-bearing NJ account) are paid in full by the due date specified upon approval.</li>
+              <li><strong>Property Rules:</strong> I acknowledge that the premises are for residential use only, pets and smoking are prohibited, tenant pays water, electric, and gas, and renter's insurance is required prior to move-in.</li>
+            </ul>
+
+            <div class="check-row">
+              <input type="checkbox" id="agreeTerms" name="Agreed_To_Terms" value="Yes" required />
+              <label for="agreeTerms" style="font-weight:600;">I have read and agree to the acknowledgments, disclosures, and rental terms above. <span class="req">*</span></label>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>Electronic Signature (Type Full Legal Name) <span class="req">*</span></label>
+              <input type="text" name="Electronic_Signature" placeholder="Type your full legal name" required />
+            </div>
+            <div class="field">
+              <label>Signature Date <span class="req">*</span></label>
+              <input type="date" name="Signature_Date" id="sigDate" required />
+            </div>
+          </div>
+
+          <div class="error-msg" id="formError">Please complete all required fields before submitting.</div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" onclick="prevStep(5)">&larr; Back</button>
+            <button type="submit" class="btn-primary" id="submitBtn">Submit Free Application</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Confirmation Screen -->
+      <div class="success-screen" id="successScreen">
+        <h2 style="color:var(--success);">Application Received</h2>
+        <p>Thank you for applying for <strong>431 Raritan Street, Camden, NJ 08105</strong>.</p>
+        <p style="color:var(--muted); font-size:0.92rem;">
+          We will review your information and contact you regarding next steps. If you are selected as a finalist, you will receive a separate invitation from TransUnion SmartMove to complete credit and eviction screening.
+        </p>
+        <a href="/" style="display:inline-block; margin-top:14px; color:var(--primary); font-weight:600;">Return to Home</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let occupantCount = 0;
+    let vehicleCount = 0;
+    let residenceCount = 0;
+
+    // Default signature date to today
+    document.getElementById("sigDate").valueAsDate = new Date();
+
+    function addOccupant() {
+      occupantCount++;
+      const div = document.createElement("div");
+      div.className = "sub-box";
+      div.innerHTML = `
+        <div class="sub-box-header">
+          <span>Occupant #${occupantCount}</span>
+          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove()">Remove</button>
+        </div>
+        <div class="grid-3">
+          <div class="field" style="margin-bottom:0;">
+            <label>Full Name</label>
+            <input type="text" name="Occupant_${occupantCount}_Name" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Relationship</label>
+            <input type="text" name="Occupant_${occupantCount}_Relationship" placeholder="e.g., Spouse, Child" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Age (18+ must apply separately)</label>
+            <input type="number" name="Occupant_${occupantCount}_Age" />
+          </div>
+        </div>
+      `;
+      document.getElementById("occupantsContainer").appendChild(div);
+    }
+
+    function addVehicle() {
+      vehicleCount++;
+      const div = document.createElement("div");
+      div.className = "sub-box";
+      div.innerHTML = `
+        <div class="sub-box-header">
+          <span>Vehicle #${vehicleCount}</span>
+          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove()">Remove</button>
+        </div>
+        <div class="grid-3">
+          <div class="field" style="margin-bottom:0;">
+            <label>Make &amp; Model</label>
+            <input type="text" name="Vehicle_${vehicleCount}_Make_Model" placeholder="e.g., Honda Civic" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Year &amp; Color</label>
+            <input type="text" name="Vehicle_${vehicleCount}_Year_Color" placeholder="e.g., 2020 Silver" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>License Plate &amp; State</label>
+            <input type="text" name="Vehicle_${vehicleCount}_Plate" placeholder="e.g., NJ ABC-1234" />
+          </div>
+        </div>
+      `;
+      document.getElementById("vehiclesContainer").appendChild(div);
+    }
+
+    function addResidence() {
+      residenceCount++;
+      const div = document.createElement("div");
+      div.className = "sub-box";
+      div.innerHTML = `
+        <div class="sub-box-header">
+          <span>Previous Residence #${residenceCount}</span>
+          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove()">Remove</button>
+        </div>
+        <div class="field">
+          <label>Street Address</label>
+          <input type="text" name="Prev_${residenceCount}_Address" />
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label>City / State / ZIP</label>
+            <input type="text" name="Prev_${residenceCount}_CityStateZip" />
+          </div>
+          <div class="field">
+            <label>Dates Lived Here (From – To)</label>
+            <input type="text" name="Prev_${residenceCount}_Dates" placeholder="MM/YYYY – MM/YYYY" />
+          </div>
+          <div class="field">
+            <label>Monthly Rent ($)</label>
+            <input type="number" name="Prev_${residenceCount}_Rent" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field" style="margin-bottom:0;">
+            <label>Landlord Name &amp; Phone/Email</label>
+            <input type="text" name="Prev_${residenceCount}_Landlord" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label>Reason for Leaving</label>
+            <input type="text" name="Prev_${residenceCount}_Reason" />
+          </div>
+        </div>
+      `;
+      document.getElementById("prevResidencesContainer").appendChild(div);
+    }
+
+    // Add 1 previous residence block by default so 3-year history is visible right away
+    addResidence();
+
+    function validateStep(stepNum) {
+      const panel = document.querySelector(`.step-panel[data-step="${stepNum}"]`);
+      const inputs = panel.querySelectorAll("input[required], select[required], textarea[required]");
+      for (const el of inputs) {
+        if (!el.checkValidity()) {
+          el.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function showStep(stepNum) {
+      document.querySelectorAll(".step-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`.step-panel[data-step="${stepNum}"]`).classList.add("active");
+
+      document.querySelectorAll(".step-pill").forEach(pill => {
+        const s = Number(pill.dataset.step);
+        pill.classList.remove("active", "done");
+        if (s === stepNum) pill.classList.add("active");
+        if (s < stepNum) pill.classList.add("done");
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function nextStep(current) {
+      if (validateStep(current)) showStep(current + 1);
+    }
+
+    function prevStep(current) {
+      showStep(current - 1);
+    }
+
+    // AJAX Submit to Web3Forms
+    const form = document.getElementById("rentalForm");
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (!validateStep(5)) return;
+
+      const btn = document.getElementById("submitBtn");
+      const err = document.getElementById("formError");
+      btn.disabled = true;
+      btn.textContent = "Submitting...";
+      err.style.display = "none";
+
+      try {
+        const formData = new FormData(form);
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        if (data.success) {
+          form.style.display = "none";
+          document.getElementById("stepper").style.display = "none";
+          document.getElementById("successScreen").style.display = "block";
+        } else {
+          throw new Error(data.message || "Submission failed");
+        }
+      } catch (error) {
+        err.textContent = "There was an error submitting your application. Please try again or contact the landlord directly.";
+        err.style.display = "block";
+        btn.disabled = false;
+        btn.textContent = "Submit Free Application";
+      }
+    });
+  </script>
+</body>
+</html>
