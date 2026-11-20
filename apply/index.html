@@ -90,11 +90,11 @@
       color: var(--text);
     }
 
-    /* Progress Bar (TurboTenant Style) */
+    /* Progress Bar */
     .stepper {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       gap: 6px;
     }
     .step-pill {
@@ -115,6 +115,28 @@
       color: var(--success);
       border-bottom-color: var(--success);
     }
+
+    .draft-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .btn-link-clear {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .btn-link-clear:hover { color: var(--danger); }
 
     /* Form Card */
     .form-card {
@@ -165,6 +187,7 @@
     input[type="tel"],
     input[type="date"],
     input[type="number"],
+    input[type="file"],
     select,
     textarea {
       width: 100%;
@@ -277,8 +300,8 @@
 
   <header class="topbar">
     <div class="topbar-inner">
-      <a href="/" class="brand">Yoabra Rentals</a>
-      <span class="property-badge">Online Rental Application • $0 Pre-Screening Fee</span>
+      <a href="/" class="brand">Yoabra</a>
+      <span class="property-badge">Online Rental Application &bull; $0 Pre-Screening Fee</span>
     </div>
   </header>
 
@@ -287,7 +310,7 @@
     <section class="summary-card">
       <h1>431 Raritan Street, Camden, NJ 08105</h1>
       <div class="summary-meta">
-        Landlord / Owner: <strong>[YOUR NAME / LLC]</strong> &nbsp;|&nbsp; Contact: <strong>[YOUR CONTACT EMAIL / PHONE]</strong>
+        Landlord / Owner: <strong>Yoabra LLC</strong> &nbsp;|&nbsp; Contact: <strong>yoabrallc@gmail.com &bull; (856) 359-4714</strong>
       </div>
       <div class="terms-grid">
         <div><strong>Monthly Rent</strong>$1,700 (due on the 1st)</div>
@@ -308,12 +331,13 @@
       <div class="step-pill" data-step="5">5. Background &amp; Sign</div>
     </div>
 
+    <div class="draft-bar" id="draftBar">
+      <span id="draftStatus">Drafts save automatically in this browser.</span>
+      <button type="button" class="btn-link-clear" id="clearDraftBtn">Clear Saved Draft</button>
+    </div>
+
     <div class="form-card">
-      <form id="rentalForm" action="https://api.web3forms.com/submit" method="POST">
-        <!-- Web3Forms Config -->
-        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY" />
-        <input type="hidden" name="subject" value="New Rental Application — 431 Raritan St, Camden NJ" />
-        <input type="hidden" name="from_name" value="Yoabra Rental Portal" />
+      <form id="rentalForm" action="/api/apply" method="POST" enctype="multipart/form-data">
         <input type="checkbox" name="botcheck" style="display:none;" />
 
         <!-- STEP 1: APPLICANT & MOVE-IN -->
@@ -557,9 +581,13 @@
                 <input type="number" name="Total_Monthly_Income" required />
               </div>
             </div>
-            <div class="field" style="margin-bottom:0;">
+            <div class="field">
               <label>Voucher / Assistance Program &amp; Caseworker Contact (if applicable)</label>
               <input type="text" name="Voucher_Details" placeholder="e.g., Section 8 / SRAP / TRA — Caseworker name, phone, email" />
+            </div>
+            <div class="field" style="margin-bottom:0;">
+              <label>Supporting Document — Income / Voucher Proof (Optional, PDF/JPG/PNG/WEBP, max 5 MB)</label>
+              <input type="file" name="supporting_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
             </div>
           </div>
 
@@ -719,9 +747,15 @@
   </main>
 
   <script>
+    const DRAFT_KEY = "yoabra_apply_draft_v1";
+    const form = document.getElementById("rentalForm");
+    const draftStatus = document.getElementById("draftStatus");
+    const clearDraftBtn = document.getElementById("clearDraftBtn");
+
     let occupantCount = 0;
     let vehicleCount = 0;
     let residenceCount = 0;
+    let currentStep = 1;
 
     // Default signature date to today
     document.getElementById("sigDate").valueAsDate = new Date();
@@ -730,23 +764,24 @@
       occupantCount++;
       const div = document.createElement("div");
       div.className = "sub-box";
+      div.dataset.repeater = "occupant";
       div.innerHTML = `
         <div class="sub-box-header">
-          <span>Occupant #${occupantCount}</span>
-          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove()">Remove</button>
+          <span>Occupant #\${occupantCount}</span>
+          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove(); saveDraft();">Remove</button>
         </div>
         <div class="grid-3">
           <div class="field" style="margin-bottom:0;">
             <label>Full Name</label>
-            <input type="text" name="Occupant_${occupantCount}_Name" />
+            <input type="text" name="Occupant_\${occupantCount}_Name" />
           </div>
           <div class="field" style="margin-bottom:0;">
             <label>Relationship</label>
-            <input type="text" name="Occupant_${occupantCount}_Relationship" placeholder="e.g., Spouse, Child" />
+            <input type="text" name="Occupant_\${occupantCount}_Relationship" placeholder="e.g., Spouse, Child" />
           </div>
           <div class="field" style="margin-bottom:0;">
             <label>Age (18+ must apply separately)</label>
-            <input type="number" name="Occupant_${occupantCount}_Age" />
+            <input type="number" name="Occupant_\${occupantCount}_Age" />
           </div>
         </div>
       `;
@@ -757,23 +792,24 @@
       vehicleCount++;
       const div = document.createElement("div");
       div.className = "sub-box";
+      div.dataset.repeater = "vehicle";
       div.innerHTML = `
         <div class="sub-box-header">
-          <span>Vehicle #${vehicleCount}</span>
-          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove()">Remove</button>
+          <span>Vehicle #\${vehicleCount}</span>
+          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove(); saveDraft();">Remove</button>
         </div>
         <div class="grid-3">
           <div class="field" style="margin-bottom:0;">
             <label>Make &amp; Model</label>
-            <input type="text" name="Vehicle_${vehicleCount}_Make_Model" placeholder="e.g., Honda Civic" />
+            <input type="text" name="Vehicle_\${vehicleCount}_Make_Model" placeholder="e.g., Honda Civic" />
           </div>
           <div class="field" style="margin-bottom:0;">
             <label>Year &amp; Color</label>
-            <input type="text" name="Vehicle_${vehicleCount}_Year_Color" placeholder="e.g., 2020 Silver" />
+            <input type="text" name="Vehicle_\${vehicleCount}_Year_Color" placeholder="e.g., 2020 Silver" />
           </div>
           <div class="field" style="margin-bottom:0;">
             <label>License Plate &amp; State</label>
-            <input type="text" name="Vehicle_${vehicleCount}_Plate" placeholder="e.g., NJ ABC-1234" />
+            <input type="text" name="Vehicle_\${vehicleCount}_Plate" placeholder="e.g., NJ ABC-1234" />
           </div>
         </div>
       `;
@@ -784,112 +820,25 @@
       residenceCount++;
       const div = document.createElement("div");
       div.className = "sub-box";
+      div.dataset.repeater = "residence";
       div.innerHTML = `
         <div class="sub-box-header">
-          <span>Previous Residence #${residenceCount}</span>
-          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove()">Remove</button>
+          <span>Previous Residence #\${residenceCount}</span>
+          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove(); saveDraft();">Remove</button>
         </div>
         <div class="field">
           <label>Street Address</label>
-          <input type="text" name="Prev_${residenceCount}_Address" />
+          <input type="text" name="Prev_\${residenceCount}_Address" />
         </div>
         <div class="grid-3">
           <div class="field">
             <label>City / State / ZIP</label>
-            <input type="text" name="Prev_${residenceCount}_CityStateZip" />
+            <input type="text" name="Prev_\${residenceCount}_CityStateZip" />
           </div>
           <div class="field">
             <label>Dates Lived Here (From – To)</label>
-            <input type="text" name="Prev_${residenceCount}_Dates" placeholder="MM/YYYY – MM/YYYY" />
+            <input type="text" name="Prev_\${residenceCount}_Dates" placeholder="MM/YYYY – MM/YYYY" />
           </div>
           <div class="field">
-            <label>Monthly Rent ($)</label>
-            <input type="number" name="Prev_${residenceCount}_Rent" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field" style="margin-bottom:0;">
-            <label>Landlord Name &amp; Phone/Email</label>
-            <input type="text" name="Prev_${residenceCount}_Landlord" />
-          </div>
-          <div class="field" style="margin-bottom:0;">
-            <label>Reason for Leaving</label>
-            <input type="text" name="Prev_${residenceCount}_Reason" />
-          </div>
-        </div>
-      `;
-      document.getElementById("prevResidencesContainer").appendChild(div);
-    }
-
-    // Add 1 previous residence block by default so 3-year history is visible right away
-    addResidence();
-
-    function validateStep(stepNum) {
-      const panel = document.querySelector(`.step-panel[data-step="${stepNum}"]`);
-      const inputs = panel.querySelectorAll("input[required], select[required], textarea[required]");
-      for (const el of inputs) {
-        if (!el.checkValidity()) {
-          el.reportValidity();
-          return false;
-        }
-      }
-      return true;
-    }
-
-    function showStep(stepNum) {
-      document.querySelectorAll(".step-panel").forEach(p => p.classList.remove("active"));
-      document.querySelector(`.step-panel[data-step="${stepNum}"]`).classList.add("active");
-
-      document.querySelectorAll(".step-pill").forEach(pill => {
-        const s = Number(pill.dataset.step);
-        pill.classList.remove("active", "done");
-        if (s === stepNum) pill.classList.add("active");
-        if (s < stepNum) pill.classList.add("done");
-      });
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function nextStep(current) {
-      if (validateStep(current)) showStep(current + 1);
-    }
-
-    function prevStep(current) {
-      showStep(current - 1);
-    }
-
-    // AJAX Submit to Web3Forms
-    const form = document.getElementById("rentalForm");
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      if (!validateStep(5)) return;
-
-      const btn = document.getElementById("submitBtn");
-      const err = document.getElementById("formError");
-      btn.disabled = true;
-      btn.textContent = "Submitting...";
-      err.style.display = "none";
-
-      try {
-        const formData = new FormData(form);
-        const res = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          body: formData
-        });
-        const data = await res.json();
-        if (data.success) {
-          form.style.display = "none";
-          document.getElementById("stepper").style.display = "none";
-          document.getElementById("successScreen").style.display = "block";
-        } else {
-          throw new Error(data.message || "Submission failed");
-        }
-      } catch (error) {
-        err.textContent = "There was an error submitting your application. Please try again or contact the landlord directly.";
-        err.style.display = "block";
-        btn.disabled = false;
-        btn.textContent = "Submit Free Application";
-      }
-    });
-  </script>
-</body>
-</html>
+            <label>Monthly Rent (\$)</label>
+            <input type="number" name="Prev_\${residenceCount}_Rent"
