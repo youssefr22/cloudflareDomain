@@ -1,4 +1,4 @@
-const TEAM_DOMAIN = "https://jawns.cloudflareaccess.com";
+const TEAM_DOMAIN = "hhttps://yoabra.cloudflareaccess.com";
 const ALLOWED_EMAILS = new Set([
   "yoabrallc@gmail.com",
   "rafeh.youssef@gmail.com"
