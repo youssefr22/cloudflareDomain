@@ -57,7 +57,6 @@
       padding: 0 16px;
     }
 
-    /* Property Summary Banner */
     .summary-card {
       background: var(--card);
       border: 1px solid #e5e7eb;
@@ -90,7 +89,6 @@
       color: var(--text);
     }
 
-    /* Progress Bar */
     .stepper {
       display: flex;
       justify-content: space-between;
@@ -138,7 +136,6 @@
     }
     .btn-link-clear:hover { color: var(--danger); }
 
-    /* Form Card */
     .form-card {
       background: var(--card);
       border: 1px solid #e5e7eb;
@@ -220,14 +217,14 @@
       font-size: 0.92rem;
     }
 
-    .radio-row, .check-row {
+    .check-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
       margin-bottom: 10px;
       font-size: 0.9rem;
     }
-    .radio-row input, .check-row input {
+    .check-row input {
       margin-top: 4px;
       width: 16px;
       height: 16px;
@@ -298,6 +295,20 @@
 </head>
 <body>
 
+  <datalist id="usStatesList">
+    <option value="AL"><option value="AK"><option value="AZ"><option value="AR"><option value="CA">
+    <option value="CO"><option value="CT"><option value="DE"><option value="FL"><option value="GA">
+    <option value="HI"><option value="ID"><option value="IL"><option value="IN"><option value="IA">
+    <option value="KS"><option value="KY"><option value="LA"><option value="ME"><option value="MD">
+    <option value="MA"><option value="MI"><option value="MN"><option value="MS"><option value="MO">
+    <option value="MT"><option value="NE"><option value="NV"><option value="NH"><option value="NJ">
+    <option value="NM"><option value="NY"><option value="NC"><option value="ND"><option value="OH">
+    <option value="OK"><option value="OR"><option value="PA"><option value="RI"><option value="SC">
+    <option value="SD"><option value="TN"><option value="TX"><option value="UT"><option value="VT">
+    <option value="VA"><option value="WA"><option value="WV"><option value="WI"><option value="WY">
+    <option value="DC">
+  </datalist>
+
   <header class="topbar">
     <div class="topbar-inner">
       <a href="/" class="brand">Yoabra</a>
@@ -306,7 +317,6 @@
   </header>
 
   <main class="container">
-    <!-- Property Overview Card -->
     <section class="summary-card">
       <h1>431 Raritan Street, Camden, NJ 08105</h1>
       <div class="summary-meta">
@@ -322,7 +332,6 @@
       </div>
     </section>
 
-    <!-- Multi-Step Progress -->
     <div class="stepper" id="stepper">
       <div class="step-pill active" data-step="1">1. Applicant</div>
       <div class="step-pill" data-step="2">2. Household</div>
@@ -411,7 +420,7 @@
           <hr style="border:none; border-top:1px solid #e5e7eb; margin:22px 0;" />
 
           <h3 style="font-size:1.05rem; margin:0 0 6px;">Vehicles (Optional)</h3>
-          <p class="step-desc" style="margin-bottom:12px;">Include make, model, color, state, and license plate for any vehicle parked at the property.</p>
+          <p class="step-desc" style="margin-bottom:12px;">Enter separate details for any vehicle parked at the property.</p>
           <div id="vehiclesContainer"></div>
           <button type="button" class="btn-outline" id="addVehicleBtn">+ Add Vehicle</button>
 
@@ -424,7 +433,7 @@
         <!-- STEP 3: 3-YEAR RESIDENCE HISTORY -->
         <div class="step-panel" data-step="3">
           <h2>Residence History (Past 3 Years)</h2>
-          <p class="step-desc">Please provide at least 3 full years of residential address history.</p>
+          <p class="step-desc">Please provide at least 3 full years of residential address history. Current landlord name and phone are required when renting.</p>
 
           <div class="sub-box">
             <div class="sub-box-header">Current Residence</div>
@@ -439,7 +448,7 @@
               </div>
               <div class="field">
                 <label>State <span class="req">*</span></label>
-                <input type="text" name="Current_State" required />
+                <input type="text" name="Current_State" list="usStatesList" placeholder="Select or type state" required />
               </div>
               <div class="field">
                 <label>ZIP Code <span class="req">*</span></label>
@@ -460,14 +469,18 @@
                 <input type="number" name="Current_Monthly_Rent" required />
               </div>
             </div>
-            <div class="grid-2">
+            <div class="grid-3">
               <div class="field">
                 <label>Landlord / Property Manager Name <span class="req">*</span></label>
                 <input type="text" name="Current_Landlord_Name" required />
               </div>
               <div class="field">
-                <label>Landlord Phone &amp; Email <span class="req">*</span></label>
-                <input type="text" name="Current_Landlord_Contact" required />
+                <label>Landlord Phone <span class="req">*</span></label>
+                <input type="tel" name="Current_Landlord_Phone" required />
+              </div>
+              <div class="field">
+                <label>Landlord Email</label>
+                <input type="email" name="Current_Landlord_Email" />
               </div>
             </div>
             <div class="field" style="margin-bottom:0;">
@@ -488,14 +501,14 @@
         <!-- STEP 4: EMPLOYMENT, INCOME & REFERENCES -->
         <div class="step-panel" data-step="4">
           <h2>Employment, Income &amp; References</h2>
-          <p class="step-desc">Include all sources of lawful income or housing assistance you want considered.</p>
+          <p class="step-desc">Include all sources of lawful income or housing assistance you want considered. Required fields vary by employment status and income sources.</p>
 
           <div class="sub-box">
             <div class="sub-box-header">Current Employment</div>
             <div class="grid-2">
               <div class="field">
                 <label>Employment Status <span class="req">*</span></label>
-                <select name="Employment_Status" required>
+                <select name="Employment_Status" id="employmentStatus" required>
                   <option value="Full-Time Employed">Full-Time Employed</option>
                   <option value="Part-Time Employed">Part-Time Employed</option>
                   <option value="Self-Employed">Self-Employed</option>
@@ -505,50 +518,68 @@
                 </select>
               </div>
               <div class="field">
-                <label>Employer / Business Name</label>
-                <input type="text" name="Current_Employer" />
+                <label>Employer / Business Name <span class="req emp-req">*</span></label>
+                <input type="text" name="Current_Employer" id="currentEmployer" required />
               </div>
             </div>
             <div class="grid-3">
               <div class="field">
-                <label>Occupation / Job Title</label>
-                <input type="text" name="Job_Title" />
+                <label>Occupation / Job Title <span class="req emp-req">*</span></label>
+                <input type="text" name="Job_Title" id="jobTitle" required />
               </div>
               <div class="field">
-                <label>Start Date</label>
-                <input type="date" name="Employment_Start_Date" />
+                <label>Start Date <span class="req emp-req">*</span></label>
+                <input type="date" name="Employment_Start_Date" id="empStartDate" required />
               </div>
               <div class="field">
-                <label>Gross Monthly Pay ($)</label>
-                <input type="number" name="Gross_Monthly_Pay" />
+                <label>Gross Monthly Pay ($) <span class="req emp-req">*</span></label>
+                <input type="number" name="Gross_Monthly_Pay" id="grossPay" required />
               </div>
             </div>
-            <div class="grid-2">
-              <div class="field">
-                <label>Employer Address</label>
-                <input type="text" name="Employer_Address" />
+            <div class="field">
+              <label>Employer Address</label>
+              <input type="text" name="Employer_Address" />
+            </div>
+            <div class="grid-3">
+              <div class="field" style="margin-bottom:0;">
+                <label>Supervisor Name</label>
+                <input type="text" name="Supervisor_Name" />
               </div>
-              <div class="field">
-                <label>Supervisor Name, Phone &amp; Email</label>
-                <input type="text" name="Supervisor_Contact" />
+              <div class="field" style="margin-bottom:0;">
+                <label>Supervisor Phone</label>
+                <input type="tel" name="Supervisor_Phone" />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Supervisor Email</label>
+                <input type="email" name="Supervisor_Email" />
               </div>
             </div>
           </div>
 
           <div class="sub-box">
             <div class="sub-box-header">Previous Employer (if less than 2 years at current)</div>
-            <div class="grid-3">
-              <div class="field" style="margin-bottom:0;">
+            <div class="grid-2">
+              <div class="field">
                 <label>Previous Employer Name</label>
                 <input type="text" name="Prev_Employer" />
               </div>
+              <div class="field">
+                <label>Previous Employer Phone</label>
+                <input type="tel" name="Prev_Employer_Phone" />
+              </div>
+            </div>
+            <div class="grid-3">
               <div class="field" style="margin-bottom:0;">
-                <label>Dates Employed</label>
-                <input type="text" name="Prev_Employer_Dates" placeholder="e.g., Jan 2023 - Mar 2025" />
+                <label>Previous Employer Email</label>
+                <input type="email" name="Prev_Employer_Email" />
               </div>
               <div class="field" style="margin-bottom:0;">
-                <label>Phone / Email</label>
-                <input type="text" name="Prev_Employer_Contact" />
+                <label>Start Date</label>
+                <input type="date" name="Prev_Employer_Start_Date" />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>End Date</label>
+                <input type="date" name="Prev_Employer_End_Date" />
               </div>
             </div>
           </div>
@@ -557,37 +588,57 @@
             <div class="sub-box-header">Monthly Income &amp; Assistance Breakdown</div>
             <div class="grid-2">
               <div class="field">
-                <label>Wages / Salary ($/mo)</label>
-                <input type="number" name="Income_Wages" value="0" />
+                <label>Wages / Salary ($/mo) <span class="req">*</span></label>
+                <input type="number" name="Income_Wages" value="0" required />
               </div>
               <div class="field">
-                <label>Self-Employment ($/mo)</label>
-                <input type="number" name="Income_Self_Employment" value="0" />
+                <label>Self-Employment ($/mo) <span class="req">*</span></label>
+                <input type="number" name="Income_Self_Employment" value="0" required />
               </div>
               <div class="field">
-                <label>Social Security / SSI / SSDI ($/mo)</label>
-                <input type="number" name="Income_Social_Security" value="0" />
+                <label>Social Security / SSI / SSDI ($/mo) <span class="req">*</span></label>
+                <input type="number" name="Income_Social_Security" value="0" required />
               </div>
               <div class="field">
-                <label>Child Support / Alimony / Benefits ($/mo)</label>
-                <input type="number" name="Income_Other_Benefits" value="0" />
+                <label>Child Support / Alimony / Benefits ($/mo) <span class="req">*</span></label>
+                <input type="number" name="Income_Other_Benefits" value="0" required />
               </div>
               <div class="field">
-                <label>Housing Voucher / Rental Assistance ($/mo)</label>
-                <input type="number" name="Income_Housing_Voucher" value="0" />
+                <label>Housing Voucher / Rental Assistance ($/mo) <span class="req">*</span></label>
+                <input type="number" name="Income_Housing_Voucher" value="0" required />
               </div>
               <div class="field">
                 <label>Total Combined Monthly Income ($) <span class="req">*</span></label>
                 <input type="number" name="Total_Monthly_Income" required />
               </div>
             </div>
+
             <div class="field">
-              <label>Voucher / Assistance Program &amp; Caseworker Contact (if applicable)</label>
-              <input type="text" name="Voucher_Details" placeholder="e.g., Section 8 / SRAP / TRA - Caseworker name, phone, email" />
+              <label>Pay Stubs / Proof of Income (Optional, PDF/JPG/PNG/WEBP, max 5 MB)</label>
+              <input type="file" name="pay_stub_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
+            </div>
+
+            <div class="field">
+              <label>Voucher / Assistance Program (e.g., Section 8, SRAP, TRA)</label>
+              <input type="text" name="Voucher_Program" />
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Caseworker Name</label>
+                <input type="text" name="Caseworker_Name" />
+              </div>
+              <div class="field">
+                <label>Caseworker Phone</label>
+                <input type="tel" name="Caseworker_Phone" />
+              </div>
+              <div class="field">
+                <label>Caseworker Email</label>
+                <input type="email" name="Caseworker_Email" />
+              </div>
             </div>
             <div class="field" style="margin-bottom:0;">
-              <label>Supporting Document - Income / Voucher Proof (Optional, PDF/JPG/PNG/WEBP, max 5 MB)</label>
-              <input type="file" name="supporting_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
+              <label>Housing Voucher / Assistance Documentation (Optional, PDF/JPG/PNG/WEBP, max 5 MB)</label>
+              <input type="file" name="voucher_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
             </div>
           </div>
 
@@ -612,42 +663,88 @@
 
           <div class="sub-box">
             <div class="sub-box-header">References &amp; Emergency Contact</div>
-            <div class="grid-3">
+
+            <div class="grid-2">
               <div class="field">
-                <label>Personal Reference 1 (Non-Relative) <span class="req">*</span></label>
-                <input type="text" name="Ref1_Name_Relation" placeholder="Name &amp; Relationship" required />
+                <label>Personal Reference 1 Name <span class="req">*</span></label>
+                <input type="text" name="Ref1_Name" required />
               </div>
               <div class="field">
-                <label>Ref 1 Phone &amp; Email <span class="req">*</span></label>
-                <input type="text" name="Ref1_Contact" required />
-              </div>
-              <div class="field">
-                <label>Personal Reference 2 (Non-Relative) <span class="req">*</span></label>
-                <input type="text" name="Ref2_Name_Relation" placeholder="Name &amp; Relationship" required />
+                <label>Personal Reference 1 Relationship (Non-Relative) <span class="req">*</span></label>
+                <input type="text" name="Ref1_Relationship" required />
               </div>
             </div>
-            <div class="grid-3">
+            <div class="grid-2">
               <div class="field">
-                <label>Ref 2 Phone &amp; Email <span class="req">*</span></label>
-                <input type="text" name="Ref2_Contact" required />
+                <label>Personal Reference 1 Phone <span class="req">*</span></label>
+                <input type="tel" name="Ref1_Phone" required />
               </div>
               <div class="field">
-                <label>Personal Reference 3 (Non-Relative) <span class="req">*</span></label>
-                <input type="text" name="Ref3_Name_Relation" placeholder="Name &amp; Relationship" required />
-              </div>
-              <div class="field">
-                <label>Ref 3 Phone &amp; Email <span class="req">*</span></label>
-                <input type="text" name="Ref3_Contact" required />
+                <label>Personal Reference 1 Email</label>
+                <input type="email" name="Ref1_Email" />
               </div>
             </div>
-            <div class="grid-2" style="margin-top:8px;">
+
+            <div class="grid-2">
+              <div class="field">
+                <label>Personal Reference 2 Name <span class="req">*</span></label>
+                <input type="text" name="Ref2_Name" required />
+              </div>
+              <div class="field">
+                <label>Personal Reference 2 Relationship (Non-Relative) <span class="req">*</span></label>
+                <input type="text" name="Ref2_Relationship" required />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Personal Reference 2 Phone <span class="req">*</span></label>
+                <input type="tel" name="Ref2_Phone" required />
+              </div>
+              <div class="field">
+                <label>Personal Reference 2 Email</label>
+                <input type="email" name="Ref2_Email" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label>Personal Reference 3 Name <span class="req">*</span></label>
+                <input type="text" name="Ref3_Name" required />
+              </div>
+              <div class="field">
+                <label>Personal Reference 3 Relationship (Non-Relative) <span class="req">*</span></label>
+                <input type="text" name="Ref3_Relationship" required />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label>Personal Reference 3 Phone <span class="req">*</span></label>
+                <input type="tel" name="Ref3_Phone" required />
+              </div>
+              <div class="field">
+                <label>Personal Reference 3 Email</label>
+                <input type="email" name="Ref3_Email" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label>Emergency Contact Name <span class="req">*</span></label>
+                <input type="text" name="Emergency_Contact_Name" required />
+              </div>
+              <div class="field">
+                <label>Emergency Contact Relationship <span class="req">*</span></label>
+                <input type="text" name="Emergency_Contact_Relationship" required />
+              </div>
+            </div>
+            <div class="grid-2">
               <div class="field" style="margin-bottom:0;">
-                <label>Emergency Contact Name &amp; Relationship <span class="req">*</span></label>
-                <input type="text" name="Emergency_Contact_Name_Relation" required />
+                <label>Emergency Contact Phone <span class="req">*</span></label>
+                <input type="tel" name="Emergency_Contact_Phone" required />
               </div>
               <div class="field" style="margin-bottom:0;">
-                <label>Emergency Contact Phone &amp; Email <span class="req">*</span></label>
-                <input type="text" name="Emergency_Contact_Info" required />
+                <label>Emergency Contact Email</label>
+                <input type="email" name="Emergency_Contact_Email" />
               </div>
             </div>
           </div>
@@ -734,7 +831,6 @@
         </div>
       </form>
 
-      <!-- Confirmation Screen -->
       <div class="success-screen" id="successScreen">
         <h2 style="color:var(--success);">Application Received</h2>
         <p>Thank you for applying for <strong>431 Raritan Street, Camden, NJ 08105</strong>.</p>
@@ -755,6 +851,7 @@
       const occupantsContainer = document.getElementById("occupantsContainer");
       const vehiclesContainer = document.getElementById("vehiclesContainer");
       const prevResidencesContainer = document.getElementById("prevResidencesContainer");
+      const empStatusEl = document.getElementById("employmentStatus");
 
       let occupantCount = 0;
       let vehicleCount = 0;
@@ -764,6 +861,23 @@
       const sigDateEl = document.getElementById("sigDate");
       if (sigDateEl && !sigDateEl.value && sigDateEl.valueAsDate !== undefined) {
         sigDateEl.valueAsDate = new Date();
+      }
+
+      function syncEmploymentRequirements() {
+        const status = empStatusEl ? empStatusEl.value : "";
+        const isEmployed = status === "Full-Time Employed" || status === "Part-Time Employed";
+        const fields = [
+          document.getElementById("currentEmployer"),
+          document.getElementById("jobTitle"),
+          document.getElementById("empStartDate"),
+          document.getElementById("grossPay")
+        ];
+        fields.forEach(function (el) {
+          if (el) el.required = isEmployed;
+        });
+        document.querySelectorAll(".emp-req").forEach(function (star) {
+          star.style.display = isEmployed ? "inline" : "none";
+        });
       }
 
       function addOccupant() {
@@ -803,18 +917,34 @@
             '<span>Vehicle #' + vehicleCount + '</span>' +
             '<button type="button" class="btn-remove remove-repeater-btn">Remove</button>' +
           '</div>' +
-          '<div class="grid-3">' +
+          '<div class="grid-2">' +
+            '<div class="field">' +
+              '<label>Make</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Make" placeholder="e.g., Honda" />' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>Model</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Model" placeholder="e.g., Civic" />' +
+            '</div>' +
+          '</div>' +
+          '<div class="grid-2">' +
+            '<div class="field">' +
+              '<label>Year</label>' +
+              '<input type="number" name="Vehicle_' + vehicleCount + '_Year" placeholder="e.g., 2020" />' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>Color</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Color" placeholder="e.g., Silver" />' +
+            '</div>' +
+          '</div>' +
+          '<div class="grid-2">' +
             '<div class="field" style="margin-bottom:0;">' +
-              '<label>Make &amp; Model</label>' +
-              '<input type="text" name="Vehicle_' + vehicleCount + '_Make_Model" placeholder="e.g., Honda Civic" />' +
+              '<label>License Plate</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Plate" placeholder="e.g., ABC-1234" />' +
             '</div>' +
             '<div class="field" style="margin-bottom:0;">' +
-              '<label>Year &amp; Color</label>' +
-              '<input type="text" name="Vehicle_' + vehicleCount + '_Year_Color" placeholder="e.g., 2020 Silver" />' +
-            '</div>' +
-            '<div class="field" style="margin-bottom:0;">' +
-              '<label>License Plate &amp; State</label>' +
-              '<input type="text" name="Vehicle_' + vehicleCount + '_Plate" placeholder="e.g., NJ ABC-1234" />' +
+              '<label>State</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_State" list="usStatesList" placeholder="e.g., NJ" />' +
             '</div>' +
           '</div>';
         vehiclesContainer.appendChild(div);
@@ -836,27 +966,49 @@
           '</div>' +
           '<div class="grid-3">' +
             '<div class="field">' +
-              '<label>City / State / ZIP</label>' +
-              '<input type="text" name="Prev_' + residenceCount + '_CityStateZip" />' +
+              '<label>City</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_City" />' +
             '</div>' +
             '<div class="field">' +
-              '<label>Dates Lived Here (From - To)</label>' +
-              '<input type="text" name="Prev_' + residenceCount + '_Dates" placeholder="MM/YYYY - MM/YYYY" />' +
+              '<label>State</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_State" list="usStatesList" placeholder="Select or type state" />' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>ZIP Code</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_ZIP" />' +
+            '</div>' +
+          '</div>' +
+          '<div class="grid-3">' +
+            '<div class="field">' +
+              '<label>Start Date</label>' +
+              '<input type="date" name="Prev_' + residenceCount + '_Start_Date" />' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>End Date</label>' +
+              '<input type="date" name="Prev_' + residenceCount + '_End_Date" />' +
             '</div>' +
             '<div class="field">' +
               '<label>Monthly Rent ($)</label>' +
               '<input type="number" name="Prev_' + residenceCount + '_Rent" />' +
             '</div>' +
           '</div>' +
-          '<div class="grid-2">' +
-            '<div class="field" style="margin-bottom:0;">' +
-              '<label>Landlord Name &amp; Phone/Email</label>' +
-              '<input type="text" name="Prev_' + residenceCount + '_Landlord" />' +
+          '<div class="grid-3">' +
+            '<div class="field">' +
+              '<label>Landlord Name</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_Landlord_Name" />' +
             '</div>' +
-            '<div class="field" style="margin-bottom:0;">' +
-              '<label>Reason for Leaving</label>' +
-              '<input type="text" name="Prev_' + residenceCount + '_Reason" />' +
+            '<div class="field">' +
+              '<label>Landlord Phone</label>' +
+              '<input type="tel" name="Prev_' + residenceCount + '_Landlord_Phone" />' +
             '</div>' +
+            '<div class="field">' +
+              '<label>Landlord Email</label>' +
+              '<input type="email" name="Prev_' + residenceCount + '_Landlord_Email" />' +
+            '</div>' +
+          '</div>' +
+          '<div class="field" style="margin-bottom:0;">' +
+            '<label>Reason for Leaving</label>' +
+            '<input type="text" name="Prev_' + residenceCount + '_Reason" />' +
           '</div>';
         prevResidencesContainer.appendChild(div);
       }
@@ -898,6 +1050,7 @@
           const raw = localStorage.getItem(DRAFT_KEY);
           if (!raw) {
             addResidence();
+            syncEmploymentRequirements();
             return;
           }
           const draft = JSON.parse(raw);
@@ -922,6 +1075,8 @@
             }
           }
 
+          syncEmploymentRequirements();
+
           if (draft.step && draft.step >= 1 && draft.step <= 5) {
             showStep(draft.step, false);
           }
@@ -930,6 +1085,7 @@
           }
         } catch (err) {
           addResidence();
+          syncEmploymentRequirements();
         }
       }
 
@@ -946,6 +1102,7 @@
         vehicleCount = 0;
         residenceCount = 0;
         addResidence();
+        syncEmploymentRequirements();
         showStep(1, false);
         if (draftStatus) draftStatus.textContent = "Saved draft cleared.";
       }
@@ -1008,6 +1165,10 @@
           prevStep(Number(btn.dataset.currentStep));
         });
       });
+
+      if (empStatusEl) {
+        empStatusEl.addEventListener("change", syncEmploymentRequirements);
+      }
 
       restoreDraft();
       form.addEventListener("input", saveDraft);

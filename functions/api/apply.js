@@ -1,4 +1,4 @@
-const MAX_FILE_BYTES = 5 * 1024 * 1024;
+const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5 MB per file
 const ALLOWED_TYPES = new Set([
   "application/pdf",
   "image/jpeg",
@@ -6,10 +6,40 @@ const ALLOWED_TYPES = new Set([
   "image/webp"
 ]);
 
+async function saveUploadToR2(bucket, file, prefix) {
+  if (!file || typeof file !== "object" || file.size === 0) {
+    return { key: null, name: null };
+  }
+  if (!ALLOWED_TYPES.has(file.type)) {
+    throw new Error("Unsupported file type. Please upload a PDF, JPG, PNG, or WEBP.");
+  }
+  if (file.size > MAX_FILE_BYTES) {
+    throw new Error("Each file must be 5 MB or smaller.");
+  }
+
+  const safeName = String(file.name || "document")
+    .replace(/[^a-zA-Z0-9._-]/g, "_")
+    .slice(0, 100);
+  const key = `applications/${prefix}/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
+
+  await bucket.put(key, await file.arrayBuffer(), {
+    httpMetadata: { contentType: file.type }
+  });
+
+  return { key, name: safeName };
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
   try {
+    if (!env.DB || !env.DOCS_BUCKET) {
+      return Response.json(
+        { ok: false, error: "Server storage bindings (DB or DOCS_BUCKET) are not configured." },
+        { status: 500 }
+      );
+    }
+
     const formData = await request.formData();
 
     if (formData.get("botcheck")) {
@@ -28,40 +58,26 @@ export async function onRequestPost(context) {
       );
     }
 
-    let fileKey = null;
-    let fileName = null;
-    const uploaded = formData.get("supporting_doc");
+    const payStubUpload = await saveUploadToR2(env.DOCS_BUCKET, formData.get("pay_stub_doc"), "pay-stubs");
+    const voucherUpload = await saveUploadToR2(env.DOCS_BUCKET, formData.get("voucher_doc"), "vouchers");
 
-    if (uploaded && typeof uploaded === "object" && uploaded.size > 0) {
-      if (!ALLOWED_TYPES.has(uploaded.type)) {
-        return Response.json(
-          { ok: false, error: "Unsupported file type. Please upload a PDF, JPG, PNG, or WEBP." },
-          { status: 400 }
-        );
-      }
-      if (uploaded.size > MAX_FILE_BYTES) {
-        return Response.json(
-          { ok: false, error: "File exceeds the 5 MB size limit." },
-          { status: 400 }
-        );
-      }
-
-      const safeName = uploaded.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 100);
-      fileKey = `applications/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
-      fileName = safeName;
-
-      await env.DOCS_BUCKET.put(fileKey, await uploaded.arrayBuffer(), {
-        httpMetadata: { contentType: uploaded.type }
-      });
-    }
+    const storedFiles = [payStubUpload.key, voucherUpload.key].filter(Boolean).join(", ") || null;
+    const storedNames = [
+      payStubUpload.name ? `PayStub: ${payStubUpload.name}` : null,
+      voucherUpload.name ? `Voucher: ${voucherUpload.name}` : null
+    ]
+      .filter(Boolean)
+      .join(" | ") || null;
 
     const fields = {};
     for (const [key, value] of formData.entries()) {
-      if (key === "botcheck" || key === "supporting_doc") continue;
+      if (key === "botcheck" || key === "pay_stub_doc" || key === "voucher_doc") continue;
       if (typeof value === "string") {
         fields[key] = value;
       }
     }
+    if (payStubUpload.key) fields.Pay_Stub_R2_Key = payStubUpload.key;
+    if (voucherUpload.key) fields.Voucher_Doc_R2_Key = voucherUpload.key;
 
     const submittedAt = new Date().toISOString();
 
@@ -77,17 +93,19 @@ export async function onRequestPost(context) {
         applicantEmail,
         applicantPhone,
         desiredMoveIn,
-        fileKey,
-        fileName,
+        storedFiles,
+        storedNames,
         JSON.stringify(fields)
       )
       .run();
 
     return Response.json({ ok: true, submittedAt });
   } catch (err) {
+    const msg = err && err.message ? err.message : "Unable to process submission right now.";
+    const isClientFileError = msg.startsWith("Unsupported file type") || msg.startsWith("Each file must be");
     return Response.json(
-      { ok: false, error: "Unable to process submission right now." },
-      { status: 500 }
+      { ok: false, error: isClientFileError ? msg : "Unable to process submission right now." },
+      { status: isClientFileError ? 400 : 500 }
     );
   }
 }
