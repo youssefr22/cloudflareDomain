@@ -396,7 +396,7 @@
           </div>
 
           <div class="btn-row">
-            <button type="button" class="btn-primary" onclick="nextStep(1)">Next: Household &amp; Vehicles &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="1">Next: Household &amp; Vehicles &rarr;</button>
           </div>
         </div>
 
@@ -406,18 +406,18 @@
           <p class="step-desc">List all other adults (co-applicants) and minor children who will live in the home.</p>
 
           <div id="occupantsContainer"></div>
-          <button type="button" class="btn-outline" onclick="addOccupant()">+ Add Co-Applicant / Occupant</button>
+          <button type="button" class="btn-outline" id="addOccupantBtn">+ Add Co-Applicant / Occupant</button>
 
           <hr style="border:none; border-top:1px solid #e5e7eb; margin:22px 0;" />
 
           <h3 style="font-size:1.05rem; margin:0 0 6px;">Vehicles (Optional)</h3>
           <p class="step-desc" style="margin-bottom:12px;">Include make, model, color, state, and license plate for any vehicle parked at the property.</p>
           <div id="vehiclesContainer"></div>
-          <button type="button" class="btn-outline" onclick="addVehicle()">+ Add Vehicle</button>
+          <button type="button" class="btn-outline" id="addVehicleBtn">+ Add Vehicle</button>
 
           <div class="btn-row">
-            <button type="button" class="btn-secondary" onclick="prevStep(2)">&larr; Back</button>
-            <button type="button" class="btn-primary" onclick="nextStep(2)">Next: Residence History &rarr;</button>
+            <button type="button" class="btn-secondary prev-step-btn" data-current-step="2">&larr; Back</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="2">Next: Residence History &rarr;</button>
           </div>
         </div>
 
@@ -477,11 +477,11 @@
           </div>
 
           <div id="prevResidencesContainer"></div>
-          <button type="button" class="btn-outline" onclick="addResidence()">+ Add Previous Address (to cover 3 years)</button>
+          <button type="button" class="btn-outline" id="addResidenceBtn">+ Add Previous Address (to cover 3 years)</button>
 
           <div class="btn-row">
-            <button type="button" class="btn-secondary" onclick="prevStep(3)">&larr; Back</button>
-            <button type="button" class="btn-primary" onclick="nextStep(3)">Next: Employment &amp; Income &rarr;</button>
+            <button type="button" class="btn-secondary prev-step-btn" data-current-step="3">&larr; Back</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="3">Next: Employment &amp; Income &rarr;</button>
           </div>
         </div>
 
@@ -544,7 +544,7 @@
               </div>
               <div class="field" style="margin-bottom:0;">
                 <label>Dates Employed</label>
-                <input type="text" name="Prev_Employer_Dates" placeholder="e.g., Jan 2023 – Mar 2025" />
+                <input type="text" name="Prev_Employer_Dates" placeholder="e.g., Jan 2023 - Mar 2025" />
               </div>
               <div class="field" style="margin-bottom:0;">
                 <label>Phone / Email</label>
@@ -583,16 +583,16 @@
             </div>
             <div class="field">
               <label>Voucher / Assistance Program &amp; Caseworker Contact (if applicable)</label>
-              <input type="text" name="Voucher_Details" placeholder="e.g., Section 8 / SRAP / TRA — Caseworker name, phone, email" />
+              <input type="text" name="Voucher_Details" placeholder="e.g., Section 8 / SRAP / TRA - Caseworker name, phone, email" />
             </div>
             <div class="field" style="margin-bottom:0;">
-              <label>Supporting Document — Income / Voucher Proof (Optional, PDF/JPG/PNG/WEBP, max 5 MB)</label>
+              <label>Supporting Document - Income / Voucher Proof (Optional, PDF/JPG/PNG/WEBP, max 5 MB)</label>
               <input type="file" name="supporting_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
             </div>
           </div>
 
           <div class="sub-box">
-            <div class="sub-box-header">Banking (Optional — Do NOT enter account numbers)</div>
+            <div class="sub-box-header">Banking (Optional - Do NOT enter account numbers)</div>
             <div class="grid-2">
               <div class="field" style="margin-bottom:0;">
                 <label>Bank Name</label>
@@ -615,7 +615,7 @@
             <div class="grid-3">
               <div class="field">
                 <label>Personal Reference 1 (Non-Relative) <span class="req">*</span></label>
-                <input type="text" name="Ref1_Name_Relation" placeholder="Name & Relationship" required />
+                <input type="text" name="Ref1_Name_Relation" placeholder="Name &amp; Relationship" required />
               </div>
               <div class="field">
                 <label>Ref 1 Phone &amp; Email <span class="req">*</span></label>
@@ -623,7 +623,7 @@
               </div>
               <div class="field">
                 <label>Personal Reference 2 (Non-Relative) <span class="req">*</span></label>
-                <input type="text" name="Ref2_Name_Relation" placeholder="Name & Relationship" required />
+                <input type="text" name="Ref2_Name_Relation" placeholder="Name &amp; Relationship" required />
               </div>
             </div>
             <div class="grid-3">
@@ -633,7 +633,7 @@
               </div>
               <div class="field">
                 <label>Personal Reference 3 (Non-Relative) <span class="req">*</span></label>
-                <input type="text" name="Ref3_Name_Relation" placeholder="Name & Relationship" required />
+                <input type="text" name="Ref3_Name_Relation" placeholder="Name &amp; Relationship" required />
               </div>
               <div class="field">
                 <label>Ref 3 Phone &amp; Email <span class="req">*</span></label>
@@ -653,8 +653,8 @@
           </div>
 
           <div class="btn-row">
-            <button type="button" class="btn-secondary" onclick="prevStep(4)">&larr; Back</button>
-            <button type="button" class="btn-primary" onclick="nextStep(4)">Next: Disclosures &amp; Sign &rarr;</button>
+            <button type="button" class="btn-secondary prev-step-btn" data-current-step="4">&larr; Back</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="4">Next: Disclosures &amp; Sign &rarr;</button>
           </div>
         </div>
 
@@ -728,7 +728,7 @@
           <div class="error-msg" id="formError">Please complete all required fields before submitting.</div>
 
           <div class="btn-row">
-            <button type="button" class="btn-secondary" onclick="prevStep(5)">&larr; Back</button>
+            <button type="button" class="btn-secondary prev-step-btn" data-current-step="5">&larr; Back</button>
             <button type="submit" class="btn-primary" id="submitBtn">Submit Free Application</button>
           </div>
         </div>
@@ -747,98 +747,307 @@
   </main>
 
   <script>
-    const DRAFT_KEY = "yoabra_apply_draft_v1";
-    const form = document.getElementById("rentalForm");
-    const draftStatus = document.getElementById("draftStatus");
-    const clearDraftBtn = document.getElementById("clearDraftBtn");
+    (function () {
+      const DRAFT_KEY = "yoabra_apply_draft_v1";
+      const form = document.getElementById("rentalForm");
+      const draftStatus = document.getElementById("draftStatus");
+      const clearDraftBtn = document.getElementById("clearDraftBtn");
+      const occupantsContainer = document.getElementById("occupantsContainer");
+      const vehiclesContainer = document.getElementById("vehiclesContainer");
+      const prevResidencesContainer = document.getElementById("prevResidencesContainer");
 
-    let occupantCount = 0;
-    let vehicleCount = 0;
-    let residenceCount = 0;
-    let currentStep = 1;
+      let occupantCount = 0;
+      let vehicleCount = 0;
+      let residenceCount = 0;
+      let currentStep = 1;
 
-    // Default signature date to today
-    document.getElementById("sigDate").valueAsDate = new Date();
+      const sigDateEl = document.getElementById("sigDate");
+      if (sigDateEl && !sigDateEl.value && sigDateEl.valueAsDate !== undefined) {
+        sigDateEl.valueAsDate = new Date();
+      }
 
-    function addOccupant() {
-      occupantCount++;
-      const div = document.createElement("div");
-      div.className = "sub-box";
-      div.dataset.repeater = "occupant";
-      div.innerHTML = `
-        <div class="sub-box-header">
-          <span>Occupant #\${occupantCount}</span>
-          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove(); saveDraft();">Remove</button>
-        </div>
-        <div class="grid-3">
-          <div class="field" style="margin-bottom:0;">
-            <label>Full Name</label>
-            <input type="text" name="Occupant_\${occupantCount}_Name" />
-          </div>
-          <div class="field" style="margin-bottom:0;">
-            <label>Relationship</label>
-            <input type="text" name="Occupant_\${occupantCount}_Relationship" placeholder="e.g., Spouse, Child" />
-          </div>
-          <div class="field" style="margin-bottom:0;">
-            <label>Age (18+ must apply separately)</label>
-            <input type="number" name="Occupant_\${occupantCount}_Age" />
-          </div>
-        </div>
-      `;
-      document.getElementById("occupantsContainer").appendChild(div);
-    }
+      function addOccupant() {
+        occupantCount++;
+        const div = document.createElement("div");
+        div.className = "sub-box";
+        div.dataset.repeater = "occupant";
+        div.innerHTML =
+          '<div class="sub-box-header">' +
+            '<span>Occupant #' + occupantCount + '</span>' +
+            '<button type="button" class="btn-remove remove-repeater-btn">Remove</button>' +
+          '</div>' +
+          '<div class="grid-3">' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Full Name</label>' +
+              '<input type="text" name="Occupant_' + occupantCount + '_Name" />' +
+            '</div>' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Relationship</label>' +
+              '<input type="text" name="Occupant_' + occupantCount + '_Relationship" placeholder="e.g., Spouse, Child" />' +
+            '</div>' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Age (18+ must apply separately)</label>' +
+              '<input type="number" name="Occupant_' + occupantCount + '_Age" />' +
+            '</div>' +
+          '</div>';
+        occupantsContainer.appendChild(div);
+      }
 
-    function addVehicle() {
-      vehicleCount++;
-      const div = document.createElement("div");
-      div.className = "sub-box";
-      div.dataset.repeater = "vehicle";
-      div.innerHTML = `
-        <div class="sub-box-header">
-          <span>Vehicle #\${vehicleCount}</span>
-          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove(); saveDraft();">Remove</button>
-        </div>
-        <div class="grid-3">
-          <div class="field" style="margin-bottom:0;">
-            <label>Make &amp; Model</label>
-            <input type="text" name="Vehicle_\${vehicleCount}_Make_Model" placeholder="e.g., Honda Civic" />
-          </div>
-          <div class="field" style="margin-bottom:0;">
-            <label>Year &amp; Color</label>
-            <input type="text" name="Vehicle_\${vehicleCount}_Year_Color" placeholder="e.g., 2020 Silver" />
-          </div>
-          <div class="field" style="margin-bottom:0;">
-            <label>License Plate &amp; State</label>
-            <input type="text" name="Vehicle_\${vehicleCount}_Plate" placeholder="e.g., NJ ABC-1234" />
-          </div>
-        </div>
-      `;
-      document.getElementById("vehiclesContainer").appendChild(div);
-    }
+      function addVehicle() {
+        vehicleCount++;
+        const div = document.createElement("div");
+        div.className = "sub-box";
+        div.dataset.repeater = "vehicle";
+        div.innerHTML =
+          '<div class="sub-box-header">' +
+            '<span>Vehicle #' + vehicleCount + '</span>' +
+            '<button type="button" class="btn-remove remove-repeater-btn">Remove</button>' +
+          '</div>' +
+          '<div class="grid-3">' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Make &amp; Model</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Make_Model" placeholder="e.g., Honda Civic" />' +
+            '</div>' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Year &amp; Color</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Year_Color" placeholder="e.g., 2020 Silver" />' +
+            '</div>' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>License Plate &amp; State</label>' +
+              '<input type="text" name="Vehicle_' + vehicleCount + '_Plate" placeholder="e.g., NJ ABC-1234" />' +
+            '</div>' +
+          '</div>';
+        vehiclesContainer.appendChild(div);
+      }
 
-    function addResidence() {
-      residenceCount++;
-      const div = document.createElement("div");
-      div.className = "sub-box";
-      div.dataset.repeater = "residence";
-      div.innerHTML = `
-        <div class="sub-box-header">
-          <span>Previous Residence #\${residenceCount}</span>
-          <button type="button" class="btn-remove" onclick="this.closest('.sub-box').remove(); saveDraft();">Remove</button>
-        </div>
-        <div class="field">
-          <label>Street Address</label>
-          <input type="text" name="Prev_\${residenceCount}_Address" />
-        </div>
-        <div class="grid-3">
-          <div class="field">
-            <label>City / State / ZIP</label>
-            <input type="text" name="Prev_\${residenceCount}_CityStateZip" />
-          </div>
-          <div class="field">
-            <label>Dates Lived Here (From – To)</label>
-            <input type="text" name="Prev_\${residenceCount}_Dates" placeholder="MM/YYYY – MM/YYYY" />
-          </div>
-          <div class="field">
-            <label>Monthly Rent (\$)</label>
-            <input type="number" name="Prev_\${residenceCount}_Rent"
+      function addResidence() {
+        residenceCount++;
+        const div = document.createElement("div");
+        div.className = "sub-box";
+        div.dataset.repeater = "residence";
+        div.innerHTML =
+          '<div class="sub-box-header">' +
+            '<span>Previous Residence #' + residenceCount + '</span>' +
+            '<button type="button" class="btn-remove remove-repeater-btn">Remove</button>' +
+          '</div>' +
+          '<div class="field">' +
+            '<label>Street Address</label>' +
+            '<input type="text" name="Prev_' + residenceCount + '_Address" />' +
+          '</div>' +
+          '<div class="grid-3">' +
+            '<div class="field">' +
+              '<label>City / State / ZIP</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_CityStateZip" />' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>Dates Lived Here (From - To)</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_Dates" placeholder="MM/YYYY - MM/YYYY" />' +
+            '</div>' +
+            '<div class="field">' +
+              '<label>Monthly Rent ($)</label>' +
+              '<input type="number" name="Prev_' + residenceCount + '_Rent" />' +
+            '</div>' +
+          '</div>' +
+          '<div class="grid-2">' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Landlord Name &amp; Phone/Email</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_Landlord" />' +
+            '</div>' +
+            '<div class="field" style="margin-bottom:0;">' +
+              '<label>Reason for Leaving</label>' +
+              '<input type="text" name="Prev_' + residenceCount + '_Reason" />' +
+            '</div>' +
+          '</div>';
+        prevResidencesContainer.appendChild(div);
+      }
+
+      form.addEventListener("click", function (e) {
+        const btn = e.target.closest(".remove-repeater-btn");
+        if (btn) {
+          const box = btn.closest(".sub-box");
+          if (box) box.remove();
+          saveDraft();
+        }
+      });
+
+      function saveDraft() {
+        try {
+          const values = {};
+          const elements = form.querySelectorAll("input, select, textarea");
+          for (const el of elements) {
+            if (!el.name || el.type === "file" || el.name === "botcheck") continue;
+            values[el.name] = el.type === "checkbox" ? el.checked : el.value;
+          }
+
+          const draft = {
+            step: currentStep,
+            occupants: occupantsContainer.querySelectorAll('[data-repeater="occupant"]').length,
+            vehicles: vehiclesContainer.querySelectorAll('[data-repeater="vehicle"]').length,
+            residences: prevResidencesContainer.querySelectorAll('[data-repeater="residence"]').length,
+            values: values,
+            savedAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          };
+
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+          if (draftStatus) draftStatus.textContent = "Draft saved locally at " + draft.savedAt + ".";
+        } catch (err) {}
+      }
+
+      function restoreDraft() {
+        try {
+          const raw = localStorage.getItem(DRAFT_KEY);
+          if (!raw) {
+            addResidence();
+            return;
+          }
+          const draft = JSON.parse(raw);
+
+          const targetOccupants = Number(draft.occupants) || 0;
+          const targetVehicles = Number(draft.vehicles) || 0;
+          const targetResidences = Number.isInteger(draft.residences) ? draft.residences : 1;
+
+          for (let i = 0; i < targetOccupants; i++) addOccupant();
+          for (let i = 0; i < targetVehicles; i++) addVehicle();
+          for (let i = 0; i < targetResidences; i++) addResidence();
+
+          if (draft.values && typeof draft.values === "object") {
+            for (const [name, val] of Object.entries(draft.values)) {
+              const el = form.elements.namedItem(name);
+              if (!el || el.type === "file") continue;
+              if (el.type === "checkbox") {
+                el.checked = Boolean(val);
+              } else {
+                el.value = val;
+              }
+            }
+          }
+
+          if (draft.step && draft.step >= 1 && draft.step <= 5) {
+            showStep(draft.step, false);
+          }
+          if (draft.savedAt && draftStatus) {
+            draftStatus.textContent = "Restored saved draft from " + draft.savedAt + ".";
+          }
+        } catch (err) {
+          addResidence();
+        }
+      }
+
+      function clearDraft() {
+        try { localStorage.removeItem(DRAFT_KEY); } catch (err) {}
+        form.reset();
+        if (sigDateEl && sigDateEl.valueAsDate !== undefined) {
+          sigDateEl.valueAsDate = new Date();
+        }
+        occupantsContainer.innerHTML = "";
+        vehiclesContainer.innerHTML = "";
+        prevResidencesContainer.innerHTML = "";
+        occupantCount = 0;
+        vehicleCount = 0;
+        residenceCount = 0;
+        addResidence();
+        showStep(1, false);
+        if (draftStatus) draftStatus.textContent = "Saved draft cleared.";
+      }
+
+      function validateStep(stepNum) {
+        const panel = document.querySelector('.step-panel[data-step="' + stepNum + '"]');
+        if (!panel) return false;
+        const inputs = panel.querySelectorAll("input[required], select[required], textarea[required]");
+        for (const el of inputs) {
+          if (el.disabled) continue;
+          if (!el.checkValidity()) {
+            el.reportValidity();
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function showStep(stepNum, shouldSave = true) {
+        const panel = document.querySelector('.step-panel[data-step="' + stepNum + '"]');
+        if (!panel) return;
+        currentStep = stepNum;
+
+        document.querySelectorAll(".step-panel").forEach(function (p) {
+          p.classList.remove("active");
+        });
+        panel.classList.add("active");
+
+        document.querySelectorAll(".step-pill").forEach(function (pill) {
+          const s = Number(pill.dataset.step);
+          pill.classList.remove("active", "done");
+          if (s === stepNum) pill.classList.add("active");
+          if (s < stepNum) pill.classList.add("done");
+        });
+
+        if (shouldSave) saveDraft();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function nextStep(current) {
+        if (validateStep(current)) showStep(current + 1);
+      }
+
+      function prevStep(current) {
+        showStep(current - 1);
+      }
+
+      document.getElementById("addOccupantBtn").addEventListener("click", addOccupant);
+      document.getElementById("addVehicleBtn").addEventListener("click", addVehicle);
+      document.getElementById("addResidenceBtn").addEventListener("click", addResidence);
+
+      document.querySelectorAll(".next-step-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          nextStep(Number(btn.dataset.currentStep));
+        });
+      });
+
+      document.querySelectorAll(".prev-step-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          prevStep(Number(btn.dataset.currentStep));
+        });
+      });
+
+      restoreDraft();
+      form.addEventListener("input", saveDraft);
+      form.addEventListener("change", saveDraft);
+      if (clearDraftBtn) clearDraftBtn.addEventListener("click", clearDraft);
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        if (!validateStep(5)) return;
+
+        const btn = document.getElementById("submitBtn");
+        const err = document.getElementById("formError");
+        btn.disabled = true;
+        btn.textContent = "Submitting...";
+        err.style.display = "none";
+
+        try {
+          const formData = new FormData(form);
+          const res = await fetch("/api/apply", {
+            method: "POST",
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok && data.ok) {
+            try { localStorage.removeItem(DRAFT_KEY); } catch (storageErr) {}
+            form.style.display = "none";
+            document.getElementById("stepper").style.display = "none";
+            document.getElementById("draftBar").style.display = "none";
+            document.getElementById("successScreen").style.display = "block";
+          } else {
+            throw new Error(data.error || "Submission failed");
+          }
+        } catch (error) {
+          err.textContent = error.message || "There was an error submitting your application. Please try again or contact Yoabra LLC directly.";
+          err.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "Submit Free Application";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
