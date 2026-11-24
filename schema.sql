@@ -7,5 +7,7 @@ CREATE TABLE IF NOT EXISTS applications (
   desired_move_in TEXT NOT NULL,
   file_key TEXT,
   file_name TEXT,
-  payload_json TEXT NOT NULL
+  payload_json TEXT NOT NULL,
+  stage TEXT NOT NULL DEFAULT 'initial',
+  parent_application_id INTEGER
 );

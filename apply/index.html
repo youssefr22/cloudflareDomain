@@ -327,7 +327,7 @@
   <header class="topbar">
     <div class="topbar-inner">
       <a href="/" class="brand">Yoabra</a>
-      <span class="property-badge">Quick Pre-Application &bull; $0 Fee</span>
+      <span class="property-badge">Rental Application &bull; $0 Pre-Screening Fee</span>
     </div>
   </header>
 
@@ -335,7 +335,7 @@
     <section class="summary-card">
       <h1>431 Raritan Street, Camden, NJ 08105</h1>
       <div class="summary-meta">
-        Management: <strong>Yoabra LLC</strong> &nbsp;|&nbsp; Questions? <strong>yoabrallc@gmail.com &bull; (856) 359-4714</strong>
+        Management: <strong>Yoabra LLC</strong> &nbsp;|&nbsp; Contact: <strong>yoabrallc@gmail.com &bull; (856) 359-4714</strong>
       </div>
       <div class="terms-grid">
         <div><strong>Monthly Rent</strong>$1,700 (due on the 1st)</div>
@@ -350,15 +350,15 @@
     <div class="followup-banner" id="followupBanner"></div>
 
     <div class="stepper" id="stepper">
-      <div class="step-pill active" data-step="1">1. Basics</div>
+      <div class="step-pill active" data-step="1">1. Applicant</div>
       <div class="step-pill" data-step="2">2. Household</div>
       <div class="step-pill" data-step="3">3. Housing</div>
       <div class="step-pill" data-step="4">4. Income</div>
-      <div class="step-pill" data-step="5">5. Review &amp; Sign</div>
+      <div class="step-pill" data-step="5">5. Screening &amp; Sign</div>
     </div>
 
     <div class="draft-bar" id="draftBar">
-      <span id="draftStatus">Progress saves automatically in this browser—fill what you have now and add more later.</span>
+      <span id="draftStatus">Drafts save automatically in this browser.</span>
       <button type="button" class="btn-link-clear" id="clearDraftBtn">Clear Saved Draft</button>
     </div>
 
@@ -370,11 +370,11 @@
 
         <!-- STEP 1: APPLICANT & MOVE-IN -->
         <div class="step-panel active" data-step="1">
-          <h2>Start Your Application</h2>
-          <p class="step-desc">Takes just a few minutes. Only fields marked <span class="req">*</span> are required to get started; any other adults (18+) moving in can submit their own form.</p>
+          <h2>Applicant &amp; Move-In Details</h2>
+          <p class="step-desc">Each adult (18+) who will live at the property should apply. Fields marked <span class="req">*</span> are required; optional details can also be added later if invited to Stage 2.</p>
 
           <div class="notice-box">
-            <strong>Equal Housing &amp; NJ Fair Chance Policy:</strong> All applicants are evaluated using the same written criteria without discrimination based on race, creed, color, national origin, ancestry, age, marital or familial status, sex, gender identity or expression, sexual orientation, disability, or lawful source of income (including Section 8, SRAP, or TRA vouchers). Credit and eviction screening (via TransUnion SmartMove) only happens if you move forward as a finalist.
+            <strong>Equal Housing &amp; NJ Fair Chance Policy:</strong> All applicants are evaluated using the same written criteria without discrimination based on race, creed, color, national origin, ancestry, age, marital or familial status, sex, gender identity or expression, sexual orientation, disability, or lawful source of income (including Section 8, SRAP, or TRA vouchers). Credit and eviction screening (via TransUnion SmartMove) only happens if selected as a finalist.
           </div>
 
           <div class="grid-2">
@@ -419,7 +419,7 @@
           <div class="check-row" style="margin-top:8px;">
             <input type="checkbox" id="idConfirm" name="Valid_Photo_ID_Confirmed" value="Yes" />
             <label for="idConfirm" style="font-weight:400;">
-              I have a valid government-issued photo ID and understand ID/credit/eviction checks via TransUnion SmartMove are only used if selected as a finalist. <span class="opt-note">(Optional)</span>
+              I have a valid government-issued photo ID and understand ID/credit/eviction checks via TransUnion SmartMove are only used if selected as a finalist. <span class="opt-note">(Optional now)</span>
             </label>
           </div>
 
@@ -431,7 +431,7 @@
         <!-- STEP 2: OTHER OCCUPANTS & VEHICLES -->
         <div class="step-panel" data-step="2">
           <h2>Household &amp; Vehicles <span class="opt-note">(Optional)</span></h2>
-          <p class="step-desc">Let us know who else would live in the home and if you need parking. You can skip this step if applying solo.</p>
+          <p class="step-desc">Add any other occupants (adults 18+ should submit separate applications) and any vehicles parked at the property.</p>
 
           <div id="occupantsContainer"></div>
           <button type="button" class="btn-outline" id="addOccupantBtn">+ Add Co-Applicant / Occupant</button>
@@ -445,14 +445,14 @@
 
           <div class="btn-row">
             <button type="button" class="btn-secondary prev-step-btn" data-current-step="2">&larr; Back</button>
-            <button type="button" class="btn-primary next-step-btn" data-current-step="2">Next: Current Housing &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="2">Next: Housing &rarr;</button>
           </div>
         </div>
 
         <!-- STEP 3: CURRENT & PRIOR HOUSING -->
         <div class="step-panel" data-step="3">
-          <h2>Current Housing</h2>
-          <p class="step-desc">Share your current living situation. Landlord contact info and prior addresses are optional now and can be provided later if we move forward.</p>
+          <h2>Current &amp; Prior Housing</h2>
+          <p class="step-desc">Current address, monthly rent/payment, and landlord name are required so we can verify your housing situation; additional details and prior addresses are optional now.</p>
 
           <div class="sub-box">
             <div class="sub-box-header">Current Residence</div>
@@ -476,6 +476,10 @@
             </div>
             <div class="grid-3">
               <div class="field">
+                <label>Current Monthly Rent / Payment ($) <span class="req">*</span></label>
+                <input type="number" name="Current_Monthly_Rent" required />
+              </div>
+              <div class="field">
                 <label>Move-In Date <span class="opt-note">(Optional)</span></label>
                 <input type="date" name="Current_Move_In_Date" />
               </div>
@@ -483,18 +487,14 @@
                 <label>Lease Expiration <span class="opt-note">(Optional)</span></label>
                 <input type="date" name="Current_Lease_Expiration" />
               </div>
-              <div class="field">
-                <label>Current Rent / Payment ($) <span class="opt-note">(Optional)</span></label>
-                <input type="number" name="Current_Monthly_Rent" />
-              </div>
             </div>
             <div class="grid-3">
               <div class="field">
-                <label>Landlord / Manager Name <span class="opt-note">(Optional)</span></label>
-                <input type="text" name="Current_Landlord_Name" />
+                <label>Landlord / Property Manager Name <span class="req">*</span></label>
+                <input type="text" name="Current_Landlord_Name" required />
               </div>
               <div class="field">
-                <label>Landlord Phone <span class="opt-note">(Optional)</span></label>
+                <label>Landlord Phone <span class="opt-note">(Optional now)</span></label>
                 <input type="tel" name="Current_Landlord_Phone" />
               </div>
               <div class="field">
@@ -520,13 +520,13 @@
         <!-- STEP 4: INCOME, VOUCHERS & OPTIONAL DETAILS -->
         <div class="step-panel" data-step="4">
           <h2>Income &amp; Assistance</h2>
-          <p class="step-desc">Tell us about your monthly income or housing voucher. You can upload pay stubs or voucher documents now or send them later once we connect.</p>
+          <p class="step-desc">Enter your employment/income status and total combined monthly income. Pay stubs, voucher documents, and extra details can be attached now or during Stage 2.</p>
 
           <div class="sub-box">
-            <div class="sub-box-header">Work &amp; Income Overview</div>
+            <div class="sub-box-header">Work &amp; Income</div>
             <div class="grid-2">
               <div class="field">
-                <label>Primary Status <span class="req">*</span></label>
+                <label>Employment Status <span class="req">*</span></label>
                 <select name="Employment_Status" id="employmentStatus" required>
                   <option value="Full-Time Employed">Full-Time Employed</option>
                   <option value="Part-Time Employed">Part-Time Employed</option>
@@ -544,32 +544,32 @@
 
             <div class="grid-2">
               <div class="field">
-                <label>Employer / Business Name <span class="opt-note">(Optional now)</span></label>
-                <input type="text" name="Current_Employer" id="currentEmployer" />
+                <label>Employer / Business Name <span class="req emp-req">*</span></label>
+                <input type="text" name="Current_Employer" id="currentEmployer" required />
               </div>
               <div class="field">
-                <label>Job Title / Role <span class="opt-note">(Optional now)</span></label>
-                <input type="text" name="Job_Title" id="jobTitle" />
+                <label>Occupation / Job Title <span class="req emp-req">*</span></label>
+                <input type="text" name="Job_Title" id="jobTitle" required />
               </div>
             </div>
 
             <div class="grid-3">
               <div class="field">
-                <label>Start Date <span class="opt-note">(Optional)</span></label>
-                <input type="date" name="Employment_Start_Date" id="empStartDate" />
+                <label>Start Date <span class="req emp-req">*</span></label>
+                <input type="date" name="Employment_Start_Date" id="empStartDate" required />
               </div>
               <div class="field">
-                <label>Gross Monthly Pay ($) <span class="opt-note">(Optional)</span></label>
-                <input type="number" name="Gross_Monthly_Pay" id="grossPay" />
+                <label>Gross Monthly Pay ($) <span class="req emp-req">*</span></label>
+                <input type="number" name="Gross_Monthly_Pay" id="grossPay" required />
               </div>
               <div class="field">
-                <label>Employer Phone <span class="opt-note">(Optional)</span></label>
+                <label>Employer / Supervisor Phone <span class="opt-note">(Optional now)</span></label>
                 <input type="tel" name="Supervisor_Phone" />
               </div>
             </div>
 
             <div class="field">
-              <label>Pay Stubs / Income Proof <span class="opt-note">(Optional — PDF, JPG, PNG, WEBP up to 5 MB)</span></label>
+              <label>Pay Stubs / Proof of Income <span class="opt-note">(Optional — PDF, JPG, PNG, WEBP up to 5 MB)</span></label>
               <input type="file" name="pay_stub_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
             </div>
 
@@ -607,7 +607,7 @@
 
           <details class="sub-box" id="extraDetailsBox">
             <summary style="font-weight:600; font-size:0.92rem; cursor:pointer; color:var(--primary);">
-              Additional Income Breakdown, Prior Employer, Bank &amp; References (Optional)
+              Additional Income Breakdown, Prior Employer, Bank, Reference &amp; Emergency Contact (Optional)
             </summary>
             <div style="margin-top:14px;">
               <div class="grid-2">
@@ -690,14 +690,14 @@
 
           <div class="btn-row">
             <button type="button" class="btn-secondary prev-step-btn" data-current-step="4">&larr; Back</button>
-            <button type="button" class="btn-primary next-step-btn" data-current-step="4">Next: Review &amp; Sign &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="4">Next: Screening &amp; Sign &rarr;</button>
           </div>
         </div>
 
         <!-- STEP 5: RENTAL HISTORY & AUTHORIZATION -->
         <div class="step-panel" data-step="5">
-          <h2>Rental History &amp; Sign</h2>
-          <p class="step-desc">Answer truthfully. A "Yes" answer does not automatically disqualify you and can be explained below.</p>
+          <h2>Rental History &amp; Authorization</h2>
+          <p class="step-desc">Answer truthfully. A "Yes" answer does not automatically disqualify you and may be explained below.</p>
 
           <div class="sub-box">
             <div class="field">
@@ -729,7 +729,7 @@
               </select>
             </div>
             <div class="field" style="margin-bottom:0;">
-              <label>Explanation / Notes <span class="opt-note">(Optional)</span></label>
+              <label>Explanation for any "Yes" answer above <span class="opt-note">(Optional)</span></label>
               <textarea name="Rental_History_Explanation" rows="3"></textarea>
             </div>
           </div>
@@ -737,25 +737,25 @@
           <div class="sub-box" style="font-size:0.86rem;">
             <p style="margin-top:0;"><strong>Applicant Certification &amp; Terms:</strong></p>
             <ul style="padding-left:18px; margin-bottom:12px;">
-              <li><strong>Accuracy:</strong> I certify that the information I provide is true and complete to the best of my knowledge.</li>
-              <li><strong>Screening &amp; Verification:</strong> I authorize Yoabra LLC to verify my provided income and housing info. Credit and eviction checks (if invited as a finalist) are completed separately via TransUnion SmartMove (NJ screening fee cap of $50 applies).</li>
-              <li><strong>$0 Pre-Application Fee:</strong> Submitting this form is free.</li>
-              <li><strong>Lease &amp; Move-In Terms:</strong> Submitting an application does not reserve the unit or create a lease. Move-in requires an approved application, a signed lease, first month's rent ($1,700), full security deposit ($2,550), and renter's insurance; residential use only, no pets, no smoking, and tenant pays water, electric, and gas.</li>
+              <li><strong>Accuracy:</strong> I certify that all information provided is true and complete. Materially false or incomplete statements may be grounds for denial or lease termination.</li>
+              <li><strong>Verification &amp; Screening:</strong> I authorize Yoabra LLC to verify my provided income and housing info. If invited as a finalist, credit and eviction checks are completed separately via TransUnion SmartMove (NJ screening fee cap of $50 applies).</li>
+              <li><strong>$0 Pre-Application Fee:</strong> Submitting this application is free.</li>
+              <li><strong>Lease &amp; Move-In Terms:</strong> Submitting an application does not reserve the unit or create a lease. Possession requires an approved application, a signed lease, first month's rent ($1,700), full security deposit ($2,550), and renter's insurance; residential use only, no pets, no smoking, and tenant pays water, electric, and gas.</li>
             </ul>
 
             <div class="check-row">
               <input type="checkbox" id="agreeTerms" name="Agreed_To_Terms" value="Yes" required />
-              <label for="agreeTerms" style="font-weight:600;">I agree to the terms and disclosures above. <span class="req">*</span></label>
+              <label for="agreeTerms" style="font-weight:600;">I have read and agree to the acknowledgments, disclosures, and rental terms above. <span class="req">*</span></label>
             </div>
           </div>
 
           <div class="grid-2">
             <div class="field">
-              <label>Electronic Signature (Full Legal Name) <span class="req">*</span></label>
+              <label>Electronic Signature (Type Full Legal Name) <span class="req">*</span></label>
               <input type="text" name="Electronic_Signature" placeholder="Type your full legal name" required />
             </div>
             <div class="field">
-              <label>Date <span class="req">*</span></label>
+              <label>Signature Date <span class="req">*</span></label>
               <input type="date" name="Signature_Date" id="sigDate" required />
             </div>
           </div>
@@ -773,7 +773,7 @@
         <h2 style="color:var(--success);">Application Received</h2>
         <p>Thank you for applying for <strong>431 Raritan Street, Camden, NJ 08105</strong>.</p>
         <p style="color:var(--muted); font-size:0.92rem;">
-          We will review your information and reach out regarding next steps. If you are selected as a finalist, you will receive a separate TransUnion SmartMove invitation for credit and eviction screening.
+          We will review your information and contact you regarding next steps. If you are selected as a finalist, you will receive a separate invitation from TransUnion SmartMove to complete credit and eviction screening.
         </p>
         <a href="/" style="display:inline-block; margin-top:14px; color:var(--primary); font-weight:600;">Return to Home</a>
       </div>
@@ -782,13 +782,14 @@
 
   <script>
     (function () {
-      const DRAFT_KEY = "yoabra_apply_draft_v2";
+      const DRAFT_KEY = "yoabra_apply_draft_v3";
       const form = document.getElementById("rentalForm");
       const draftStatus = document.getElementById("draftStatus");
       const clearDraftBtn = document.getElementById("clearDraftBtn");
       const occupantsContainer = document.getElementById("occupantsContainer");
       const vehiclesContainer = document.getElementById("vehiclesContainer");
       const prevResidencesContainer = document.getElementById("prevResidencesContainer");
+      const empStatusEl = document.getElementById("employmentStatus");
       const appStageInput = document.getElementById("appStageInput");
       const parentIdInput = document.getElementById("parentIdInput");
       const followupBanner = document.getElementById("followupBanner");
@@ -814,6 +815,23 @@
       }
       if (Number.isInteger(refId) && refId > 0) {
         parentIdInput.value = String(refId);
+      }
+
+      function syncEmploymentRequirements() {
+        const status = empStatusEl ? empStatusEl.value : "";
+        const isEmployed = status === "Full-Time Employed" || status === "Part-Time Employed";
+        const fields = [
+          document.getElementById("currentEmployer"),
+          document.getElementById("jobTitle"),
+          document.getElementById("empStartDate"),
+          document.getElementById("grossPay")
+        ];
+        fields.forEach(function (el) {
+          if (el) el.required = isEmployed;
+        });
+        document.querySelectorAll(".emp-req").forEach(function (star) {
+          star.style.display = isEmployed ? "inline" : "none";
+        });
       }
 
       async function hydrateFromReference() {
@@ -1010,7 +1028,10 @@
       function restoreDraft() {
         try {
           const raw = localStorage.getItem(DRAFT_KEY);
-          if (!raw) return;
+          if (!raw) {
+            syncEmploymentRequirements();
+            return;
+          }
           const draft = JSON.parse(raw);
 
           const targetOccupants = Number(draft.occupants) || 0;
@@ -1033,13 +1054,17 @@
             }
           }
 
+          syncEmploymentRequirements();
+
           if (draft.step && draft.step >= 1 && draft.step <= 5) {
             showStep(draft.step, false);
           }
           if (draft.savedAt && draftStatus) {
             draftStatus.textContent = "Restored saved draft from " + draft.savedAt + ".";
           }
-        } catch (err) {}
+        } catch (err) {
+          syncEmploymentRequirements();
+        }
       }
 
       function clearDraft() {
@@ -1056,6 +1081,7 @@
         occupantCount = 0;
         vehicleCount = 0;
         residenceCount = 0;
+        syncEmploymentRequirements();
         showStep(1, false);
         if (draftStatus) draftStatus.textContent = "Saved draft cleared.";
       }
@@ -1119,6 +1145,10 @@
           prevStep(Number(btn.dataset.currentStep));
         });
       });
+
+      if (empStatusEl) {
+        empStatusEl.addEventListener("change", syncEmploymentRequirements);
+      }
 
       restoreDraft();
       hydrateFromReference();

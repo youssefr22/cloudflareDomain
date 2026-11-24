@@ -59,7 +59,7 @@ export async function onRequestGet(context) {
       }
     });
   } catch (err) {
-    return Response.json({ ok: false, error: "Lookup failed." }, { status: 500 });
+    return Response.json({ ok: false, error: err?.message || "Lookup failed." }, { status: 500 });
   }
 }
 
@@ -87,7 +87,7 @@ export async function onRequestPost(context) {
 
     if (!applicantName || !applicantEmail || !applicantPhone || !desiredMoveIn) {
       return Response.json(
-        { ok: false, error: "Missing required applicant fields." },
+        { ok: false, error: "Please fill out your name, phone, email, and desired move-in date." },
         { status: 400 }
       );
     }
@@ -155,7 +155,7 @@ export async function onRequestPost(context) {
     const msg = err && err.message ? err.message : "Unable to process submission right now.";
     const isClientFileError = msg.startsWith("Unsupported file type") || msg.startsWith("Each file must be");
     return Response.json(
-      { ok: false, error: isClientFileError ? msg : "Unable to process submission right now." },
+      { ok: false, error: msg },
       { status: isClientFileError ? 400 : 500 }
     );
   }
