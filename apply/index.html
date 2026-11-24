@@ -177,7 +177,7 @@
       font-weight: 600;
       margin-bottom: 5px;
     }
-    .opt-note {
+    .hint-note {
       font-weight: 400;
       color: var(--muted);
       font-size: 0.8rem;
@@ -371,7 +371,7 @@
         <!-- STEP 1: APPLICANT & MOVE-IN -->
         <div class="step-panel active" data-step="1">
           <h2>Applicant &amp; Move-In Details</h2>
-          <p class="step-desc">Each adult (18+) who will live at the property should apply. Fields marked <span class="req">*</span> are required; optional details can also be added later if invited to Stage 2.</p>
+          <p class="step-desc">Each adult (18+) who will live at the property should apply. Fields marked <span class="req">*</span> are required.</p>
 
           <div class="notice-box">
             <strong>Equal Housing &amp; NJ Fair Chance Policy:</strong> All applicants are evaluated using the same written criteria without discrimination based on race, creed, color, national origin, ancestry, age, marital or familial status, sex, gender identity or expression, sexual orientation, disability, or lawful source of income (including Section 8, SRAP, or TRA vouchers). Credit and eviction screening (via TransUnion SmartMove) only happens if selected as a finalist.
@@ -396,7 +396,7 @@
               <input type="text" name="Applicant_Full_Name" id="fullNameInput" required />
             </div>
             <div class="field">
-              <label>Other Names Used <span class="opt-note">(Optional)</span></label>
+              <label>Other Names Used <span class="hint-note">(If applicable)</span></label>
               <input type="text" name="Other_Names_Used" />
             </div>
           </div>
@@ -411,15 +411,15 @@
               <input type="email" name="Email" required />
             </div>
             <div class="field">
-              <label>Date of Birth <span class="opt-note">(Optional now)</span></label>
-              <input type="date" name="Date_of_Birth" />
+              <label>Date of Birth <span class="req">*</span></label>
+              <input type="date" name="Date_of_Birth" required />
             </div>
           </div>
 
           <div class="check-row" style="margin-top:8px;">
-            <input type="checkbox" id="idConfirm" name="Valid_Photo_ID_Confirmed" value="Yes" />
+            <input type="checkbox" id="idConfirm" name="Valid_Photo_ID_Confirmed" value="Yes" required />
             <label for="idConfirm" style="font-weight:400;">
-              I have a valid government-issued photo ID and understand ID/credit/eviction checks via TransUnion SmartMove are only used if selected as a finalist. <span class="opt-note">(Optional now)</span>
+              I confirm I have a valid government-issued photo ID and understand ID/credit/eviction checks via TransUnion SmartMove are only used if selected as a finalist. <span class="req">*</span>
             </label>
           </div>
 
@@ -430,7 +430,7 @@
 
         <!-- STEP 2: OTHER OCCUPANTS & VEHICLES -->
         <div class="step-panel" data-step="2">
-          <h2>Household &amp; Vehicles <span class="opt-note">(Optional)</span></h2>
+          <h2>Household &amp; Vehicles <span class="hint-note">(Add if applicable)</span></h2>
           <p class="step-desc">Add any other occupants (adults 18+ should submit separate applications) and any vehicles parked at the property.</p>
 
           <div id="occupantsContainer"></div>
@@ -438,7 +438,7 @@
 
           <hr style="border:none; border-top:1px solid #e5e7eb; margin:22px 0;" />
 
-          <h3 style="font-size:1.05rem; margin:0 0 6px;">Vehicles <span class="opt-note">(Optional)</span></h3>
+          <h3 style="font-size:1.05rem; margin:0 0 6px;">Vehicles <span class="hint-note">(Add if applicable)</span></h3>
           <p class="step-desc" style="margin-bottom:12px;">Add any vehicle you plan to park at the property.</p>
           <div id="vehiclesContainer"></div>
           <button type="button" class="btn-outline" id="addVehicleBtn">+ Add Vehicle</button>
@@ -452,7 +452,7 @@
         <!-- STEP 3: CURRENT & PRIOR HOUSING -->
         <div class="step-panel" data-step="3">
           <h2>Current &amp; Prior Housing</h2>
-          <p class="step-desc">Current address, monthly rent/payment, and landlord name are required so we can verify your housing situation; additional details and prior addresses are optional now.</p>
+          <p class="step-desc">Fields marked <span class="req">*</span> are required; additional details and prior addresses can be added now or in Stage 2.</p>
 
           <div class="sub-box">
             <div class="sub-box-header">Current Residence</div>
@@ -476,16 +476,16 @@
             </div>
             <div class="grid-3">
               <div class="field">
+                <label>Move-In Date <span class="req">*</span></label>
+                <input type="date" name="Current_Move_In_Date" required />
+              </div>
+              <div class="field">
+                <label>Lease Expiration <span class="hint-note">(If applicable)</span></label>
+                <input type="date" name="Current_Lease_Expiration" />
+              </div>
+              <div class="field">
                 <label>Current Monthly Rent / Payment ($) <span class="req">*</span></label>
                 <input type="number" name="Current_Monthly_Rent" required />
-              </div>
-              <div class="field">
-                <label>Move-In Date <span class="opt-note">(Optional)</span></label>
-                <input type="date" name="Current_Move_In_Date" />
-              </div>
-              <div class="field">
-                <label>Lease Expiration <span class="opt-note">(Optional)</span></label>
-                <input type="date" name="Current_Lease_Expiration" />
               </div>
             </div>
             <div class="grid-3">
@@ -494,22 +494,22 @@
                 <input type="text" name="Current_Landlord_Name" required />
               </div>
               <div class="field">
-                <label>Landlord Phone <span class="opt-note">(Optional now)</span></label>
+                <label>Landlord Phone <span class="hint-note">(Can be added now or in Stage 2)</span></label>
                 <input type="tel" name="Current_Landlord_Phone" />
               </div>
               <div class="field">
-                <label>Landlord Email <span class="opt-note">(Optional)</span></label>
+                <label>Landlord Email <span class="hint-note">(Can be added now or in Stage 2)</span></label>
                 <input type="email" name="Current_Landlord_Email" />
               </div>
             </div>
             <div class="field" style="margin-bottom:0;">
-              <label>Reason for Moving <span class="opt-note">(Optional)</span></label>
+              <label>Reason for Moving <span class="hint-note">(Can be added now or in Stage 2)</span></label>
               <input type="text" name="Current_Reason_For_Leaving" />
             </div>
           </div>
 
           <div id="prevResidencesContainer"></div>
-          <button type="button" class="btn-outline" id="addResidenceBtn">+ Add Previous Address (Optional)</button>
+          <button type="button" class="btn-outline" id="addResidenceBtn">+ Add Previous Address</button>
 
           <div class="btn-row">
             <button type="button" class="btn-secondary prev-step-btn" data-current-step="3">&larr; Back</button>
@@ -520,7 +520,7 @@
         <!-- STEP 4: INCOME, VOUCHERS & OPTIONAL DETAILS -->
         <div class="step-panel" data-step="4">
           <h2>Income &amp; Assistance</h2>
-          <p class="step-desc">Enter your employment/income status and total combined monthly income. Pay stubs, voucher documents, and extra details can be attached now or during Stage 2.</p>
+          <p class="step-desc">Enter your employment/income status and total combined monthly income. Supporting documents and extra details can be attached now or during Stage 2.</p>
 
           <div class="sub-box">
             <div class="sub-box-header">Work &amp; Income</div>
@@ -563,51 +563,51 @@
                 <input type="number" name="Gross_Monthly_Pay" id="grossPay" required />
               </div>
               <div class="field">
-                <label>Employer / Supervisor Phone <span class="opt-note">(Optional now)</span></label>
+                <label>Employer / Supervisor Phone <span class="hint-note">(Can be added now or in Stage 2)</span></label>
                 <input type="tel" name="Supervisor_Phone" />
               </div>
             </div>
 
             <div class="field">
-              <label>Pay Stubs / Proof of Income <span class="opt-note">(Optional — PDF, JPG, PNG, WEBP up to 5 MB)</span></label>
+              <label>Pay Stubs / Proof of Income <span class="hint-note">(PDF, JPG, PNG, WEBP up to 5 MB &bull; Can be added now or in Stage 2)</span></label>
               <input type="file" name="pay_stub_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
             </div>
 
             <div class="grid-2">
               <div class="field">
-                <label>Voucher / Assistance Program <span class="opt-note">(Optional — e.g., Section 8, SRAP, TRA)</span></label>
+                <label>Voucher / Assistance Program <span class="hint-note">(e.g., Section 8, SRAP, TRA)</span></label>
                 <input type="text" name="Voucher_Program" />
               </div>
               <div class="field">
-                <label>Monthly Voucher / Assistance ($) <span class="opt-note">(Optional)</span></label>
+                <label>Monthly Voucher / Assistance ($)</label>
                 <input type="number" name="Income_Housing_Voucher" placeholder="0" />
               </div>
             </div>
 
             <div class="grid-3">
               <div class="field">
-                <label>Caseworker Name <span class="opt-note">(Optional)</span></label>
+                <label>Caseworker Name</label>
                 <input type="text" name="Caseworker_Name" />
               </div>
               <div class="field">
-                <label>Caseworker Phone <span class="opt-note">(Optional)</span></label>
+                <label>Caseworker Phone</label>
                 <input type="tel" name="Caseworker_Phone" />
               </div>
               <div class="field">
-                <label>Caseworker Email <span class="opt-note">(Optional)</span></label>
+                <label>Caseworker Email</label>
                 <input type="email" name="Caseworker_Email" />
               </div>
             </div>
 
             <div class="field" style="margin-bottom:0;">
-              <label>Housing Voucher Documentation <span class="opt-note">(Optional — PDF, JPG, PNG, WEBP up to 5 MB)</span></label>
+              <label>Housing Voucher Documentation <span class="hint-note">(PDF, JPG, PNG, WEBP up to 5 MB &bull; Can be added now or in Stage 2)</span></label>
               <input type="file" name="voucher_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" />
             </div>
           </div>
 
           <details class="sub-box" id="extraDetailsBox">
             <summary style="font-weight:600; font-size:0.92rem; cursor:pointer; color:var(--primary);">
-              Additional Income Breakdown, Prior Employer, Bank, Reference &amp; Emergency Contact (Optional)
+              Additional Income Breakdown, Prior Employer, Reference &amp; Emergency Contact (Fill in what applies)
             </summary>
             <div style="margin-top:14px;">
               <div class="grid-2">
@@ -637,22 +637,6 @@
                 <div class="field">
                   <label>Previous Employer Phone</label>
                   <input type="tel" name="Prev_Employer_Phone" />
-                </div>
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label>Bank Name <span class="opt-note">(No account numbers)</span></label>
-                  <input type="text" name="Bank_Name" />
-                </div>
-                <div class="field">
-                  <label>Account Type</label>
-                  <select name="Bank_Account_Type">
-                    <option value="">Select...</option>
-                    <option value="Checking">Checking</option>
-                    <option value="Savings">Savings</option>
-                    <option value="Checking & Savings">Checking &amp; Savings</option>
-                  </select>
                 </div>
               </div>
 
@@ -729,7 +713,7 @@
               </select>
             </div>
             <div class="field" style="margin-bottom:0;">
-              <label>Explanation for any "Yes" answer above <span class="opt-note">(Optional)</span></label>
+              <label>Explanation for any "Yes" answer above <span class="hint-note">(If applicable)</span></label>
               <textarea name="Rental_History_Explanation" rows="3"></textarea>
             </div>
           </div>
@@ -782,7 +766,7 @@
 
   <script>
     (function () {
-      const DRAFT_KEY = "yoabra_apply_draft_v3";
+      const DRAFT_KEY = "yoabra_apply_draft_v4";
       const form = document.getElementById("rentalForm");
       const draftStatus = document.getElementById("draftStatus");
       const clearDraftBtn = document.getElementById("clearDraftBtn");
