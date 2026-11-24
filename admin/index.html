@@ -90,6 +90,24 @@
       border: 1px solid #fecaca;
     }
 
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .badge-initial {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+    .badge-full {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
     .app-header {
       display: flex;
       justify-content: space-between;
@@ -273,6 +291,14 @@
             let answers = {};
             try { answers = JSON.parse(app.payload_json || "{}"); } catch (e) {}
 
+            const stage = app.stage === "full" ? "full" : "initial";
+            const stageBadge = stage === "full"
+              ? `<span class="badge badge-full">Full Follow-Up</span>`
+              : `<span class="badge badge-initial">Initial Pre-App</span>`;
+            const parentNote = app.parent_application_id
+              ? ` &bull; Linked to #${escapeHtml(app.parent_application_id)}`
+              : "";
+
             const fileKeys = (app.file_key || "").split(",").map(s => s.trim()).filter(Boolean);
             const attachmentButtons = fileKeys.map(function (fk) {
               const label = fk.includes("/pay-stubs/") ? "View Pay Stub / Income Proof" :
@@ -286,19 +312,21 @@
             const totalIncome = answers.Total_Monthly_Income ? `$${Number(answers.Total_Monthly_Income).toLocaleString()}/mo` : "N/A";
             const empStatus = answers.Employment_Status || "N/A";
             const evicted = answers.Q_Evicted || "N/A";
+            const stage2Url = `https://yoabra.com/apply?ref=${app.id}&stage=full`;
 
             return `
               <article class="card">
                 <div class="app-header">
                   <div>
-                    <h2 class="app-title">#${app.id} — ${escapeHtml(app.applicant_name)}</h2>
+                    <h2 class="app-title">#${app.id} — ${escapeHtml(app.applicant_name)}${stageBadge}</h2>
                     <div class="app-meta">
                       Submitted: ${escapeHtml(submittedDate)} &bull;
                       ${escapeHtml(app.applicant_email)} &bull;
-                      ${escapeHtml(app.applicant_phone)}
+                      ${escapeHtml(app.applicant_phone)}${parentNote}
                     </div>
                   </div>
                   <div class="actions">
+                    <button type="button" class="btn-outline copy-link-btn" data-url="${escapeHtml(stage2Url)}">Copy Stage-2 Link</button>
                     <button type="button" class="btn-secondary" onclick="window.print()">Print</button>
                     <button type="button" class="btn-danger delete-app-btn" data-id="${app.id}">Delete</button>
                   </div>
@@ -328,6 +356,20 @@
       document.getElementById("refreshBtn").addEventListener("click", loadApplications);
 
       appsContainer.addEventListener("click", async function (e) {
+        const copyBtn = e.target.closest(".copy-link-btn");
+        if (copyBtn) {
+          const link = copyBtn.dataset.url;
+          try {
+            await navigator.clipboard.writeText(link);
+            const orig = copyBtn.textContent;
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => { copyBtn.textContent = orig; }, 1500);
+          } catch (err) {
+            prompt("Copy Stage-2 link:", link);
+          }
+          return;
+        }
+
         const delBtn = e.target.closest(".delete-app-btn");
         if (!delBtn) return;
         const id = delBtn.dataset.id;

@@ -113,7 +113,7 @@ export async function onRequestGet(context) {
 
     const { results } = await env.DB.prepare(
       `SELECT id, submitted_at, applicant_name, applicant_email, applicant_phone,
-              desired_move_in, file_key, file_name, payload_json
+              desired_move_in, file_key, file_name, payload_json, stage, parent_application_id
        FROM applications
        ORDER BY id DESC`
     ).all();

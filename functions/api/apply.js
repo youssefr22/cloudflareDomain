@@ -29,6 +29,40 @@ async function saveUploadToR2(bucket, file, prefix) {
   return { key, name: safeName };
 }
 
+export async function onRequestGet(context) {
+  const { request, env } = context;
+  const url = new URL(request.url);
+  const refId = Number(url.searchParams.get("ref"));
+
+  if (!Number.isInteger(refId) || refId <= 0 || !env.DB) {
+    return Response.json({ ok: false, error: "Invalid reference." }, { status: 400 });
+  }
+
+  try {
+    const row = await env.DB.prepare(
+      "SELECT id, applicant_name, desired_move_in, stage FROM applications WHERE id = ?"
+    )
+      .bind(refId)
+      .first();
+
+    if (!row) {
+      return Response.json({ ok: false, error: "Reference not found." }, { status: 404 });
+    }
+
+    return Response.json({
+      ok: true,
+      reference: {
+        id: row.id,
+        applicant_name: row.applicant_name,
+        desired_move_in: row.desired_move_in,
+        stage: row.stage
+      }
+    });
+  } catch (err) {
+    return Response.json({ ok: false, error: "Lookup failed." }, { status: 500 });
+  }
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -58,6 +92,11 @@ export async function onRequestPost(context) {
       );
     }
 
+    const rawStage = String(formData.get("Application_Stage") || "initial").toLowerCase();
+    const stage = rawStage === "full" ? "full" : "initial";
+    const rawParentId = Number(formData.get("Parent_Application_ID"));
+    const parentApplicationId = Number.isInteger(rawParentId) && rawParentId > 0 ? rawParentId : null;
+
     const payStubUpload = await saveUploadToR2(env.DOCS_BUCKET, formData.get("pay_stub_doc"), "pay-stubs");
     const voucherUpload = await saveUploadToR2(env.DOCS_BUCKET, formData.get("voucher_doc"), "vouchers");
 
@@ -76,16 +115,18 @@ export async function onRequestPost(context) {
         fields[key] = value;
       }
     }
+    fields.Application_Stage = stage;
+    if (parentApplicationId) fields.Parent_Application_ID = String(parentApplicationId);
     if (payStubUpload.key) fields.Pay_Stub_R2_Key = payStubUpload.key;
     if (voucherUpload.key) fields.Voucher_Doc_R2_Key = voucherUpload.key;
 
     const submittedAt = new Date().toISOString();
 
-    await env.DB.prepare(
+    const insertResult = await env.DB.prepare(
       `INSERT INTO applications (
         submitted_at, applicant_name, applicant_email, applicant_phone,
-        desired_move_in, file_key, file_name, payload_json
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+        desired_move_in, file_key, file_name, payload_json, stage, parent_application_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     )
       .bind(
         submittedAt,
@@ -95,11 +136,21 @@ export async function onRequestPost(context) {
         desiredMoveIn,
         storedFiles,
         storedNames,
-        JSON.stringify(fields)
+        JSON.stringify(fields),
+        stage,
+        parentApplicationId
       )
       .run();
 
-    return Response.json({ ok: true, submittedAt });
+    const newId = insertResult?.meta?.last_row_id ?? null;
+
+    return Response.json({
+      ok: true,
+      id: newId,
+      stage,
+      parentApplicationId,
+      submittedAt
+    });
   } catch (err) {
     const msg = err && err.message ? err.message : "Unable to process submission right now.";
     const isClientFileError = msg.startsWith("Unsupported file type") || msg.startsWith("Each file must be");
