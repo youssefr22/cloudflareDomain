@@ -1,4 +1,5 @@
 const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5 MB per file
+const MAX_TOTAL_FILES = 8;
 const ALLOWED_TYPES = new Set([
   "application/pdf",
   "image/jpeg",
@@ -8,13 +9,13 @@ const ALLOWED_TYPES = new Set([
 
 async function saveUploadToR2(bucket, file, prefix) {
   if (!file || typeof file !== "object" || file.size === 0) {
-    return { key: null, name: null };
+    return null;
   }
   if (!ALLOWED_TYPES.has(file.type)) {
-    throw new Error("Unsupported file type. Please upload a PDF, JPG, PNG, or WEBP.");
+    throw new Error("Unsupported file type. Please upload PDF, JPG, PNG, or WEBP files.");
   }
   if (file.size > MAX_FILE_BYTES) {
-    throw new Error("Each file must be 5 MB or smaller.");
+    throw new Error(`Each file must be 5 MB or smaller (${file.name || "file"}).`);
   }
 
   const safeName = String(file.name || "document")
@@ -97,28 +98,47 @@ export async function onRequestPost(context) {
     const rawParentId = Number(formData.get("Parent_Application_ID"));
     const parentApplicationId = Number.isInteger(rawParentId) && rawParentId > 0 ? rawParentId : null;
 
-    const payStubUpload = await saveUploadToR2(env.DOCS_BUCKET, formData.get("pay_stub_doc"), "pay-stubs");
-    const voucherUpload = await saveUploadToR2(env.DOCS_BUCKET, formData.get("voucher_doc"), "vouchers");
+    const candidateUploads = [
+      ...formData.getAll("supporting_docs").map((f) => ({ file: f, prefix: "supporting-docs" })),
+      ...formData.getAll("pay_stub_doc").map((f) => ({ file: f, prefix: "pay-stubs" })),
+      ...formData.getAll("voucher_doc").map((f) => ({ file: f, prefix: "vouchers" }))
+    ].filter((item) => item.file && typeof item.file === "object" && item.file.size > 0);
 
-    const storedFiles = [payStubUpload.key, voucherUpload.key].filter(Boolean).join(", ") || null;
-    const storedNames = [
-      payStubUpload.name ? `PayStub: ${payStubUpload.name}` : null,
-      voucherUpload.name ? `Voucher: ${voucherUpload.name}` : null
-    ]
-      .filter(Boolean)
-      .join(" | ") || null;
+    if (candidateUploads.length > MAX_TOTAL_FILES) {
+      return Response.json(
+        { ok: false, error: `Please upload at most ${MAX_TOTAL_FILES} files per submission.` },
+        { status: 400 }
+      );
+    }
+
+    const savedUploads = [];
+    for (const item of candidateUploads) {
+      const saved = await saveUploadToR2(env.DOCS_BUCKET, item.file, item.prefix);
+      if (saved) savedUploads.push(saved);
+    }
+
+    const storedFiles = savedUploads.map((u) => u.key).join(", ") || null;
+    const storedNames = savedUploads.map((u) => u.name).join(" | ") || null;
 
     const fields = {};
     for (const [key, value] of formData.entries()) {
-      if (key === "botcheck" || key === "pay_stub_doc" || key === "voucher_doc") continue;
+      if (
+        key === "botcheck" ||
+        key === "supporting_docs" ||
+        key === "pay_stub_doc" ||
+        key === "voucher_doc"
+      ) {
+        continue;
+      }
       if (typeof value === "string") {
         fields[key] = value;
       }
     }
     fields.Application_Stage = stage;
     if (parentApplicationId) fields.Parent_Application_ID = String(parentApplicationId);
-    if (payStubUpload.key) fields.Pay_Stub_R2_Key = payStubUpload.key;
-    if (voucherUpload.key) fields.Voucher_Doc_R2_Key = voucherUpload.key;
+    if (savedUploads.length > 0) {
+      fields.Uploaded_Files = savedUploads.map((u) => u.name).join(", ");
+    }
 
     const submittedAt = new Date().toISOString();
 
@@ -149,11 +169,13 @@ export async function onRequestPost(context) {
       id: newId,
       stage,
       parentApplicationId,
+      uploadedCount: savedUploads.length,
       submittedAt
     });
   } catch (err) {
     const msg = err && err.message ? err.message : "Unable to process submission right now.";
-    const isClientFileError = msg.startsWith("Unsupported file type") || msg.startsWith("Each file must be");
+    const isClientFileError =
+      msg.startsWith("Unsupported file type") || msg.startsWith("Each file must be");
     return Response.json(
       { ok: false, error: msg },
       { status: isClientFileError ? 400 : 500 }
