@@ -7,6 +7,33 @@ const ALLOWED_TYPES = new Set([
   "image/webp"
 ]);
 
+function sanitizePrefillAnswers(rawPayload) {
+  let parsed = {};
+  try {
+    parsed = typeof rawPayload === "string" ? JSON.parse(rawPayload) : (rawPayload || {});
+  } catch (e) {
+    parsed = {};
+  }
+
+  const redactedKeys = new Set([
+    "Date_of_Birth",
+    "Electronic_Signature",
+    "Signature_Date",
+    "Application_Stage",
+    "Parent_Application_ID",
+    "Uploaded_Files"
+  ]);
+
+  const clean = {};
+  for (const [k, v] of Object.entries(parsed)) {
+    if (redactedKeys.has(k) || k.endsWith("_R2_Key")) continue;
+    if (typeof v === "string" || typeof v === "number" || typeof v === "boolean") {
+      clean[k] = String(v);
+    }
+  }
+  return clean;
+}
+
 async function saveUploadToR2(bucket, file, prefix) {
   if (!file || typeof file !== "object" || file.size === 0) {
     return null;
@@ -41,7 +68,9 @@ export async function onRequestGet(context) {
 
   try {
     const row = await env.DB.prepare(
-      "SELECT id, applicant_name, desired_move_in, stage FROM applications WHERE id = ?"
+      `SELECT id, applicant_name, applicant_email, applicant_phone, desired_move_in, stage, payload_json
+       FROM applications
+       WHERE id = ?`
     )
       .bind(refId)
       .first();
@@ -55,8 +84,11 @@ export async function onRequestGet(context) {
       reference: {
         id: row.id,
         applicant_name: row.applicant_name,
+        applicant_email: row.applicant_email,
+        applicant_phone: row.applicant_phone,
         desired_move_in: row.desired_move_in,
-        stage: row.stage
+        stage: row.stage,
+        answers: sanitizePrefillAnswers(row.payload_json)
       }
     });
   } catch (err) {
@@ -100,7 +132,6 @@ export async function onRequestPost(context) {
 
     const candidateUploads = [
       ...formData.getAll("supporting_docs").map((f) => ({ file: f, prefix: "supporting-docs" })),
-      ...formData.getAll("pay_stub_doc").map((f) => ({ file: f, prefix: "pay-stubs" })),
       ...formData.getAll("voucher_doc").map((f) => ({ file: f, prefix: "vouchers" }))
     ].filter((item) => item.file && typeof item.file === "object" && item.file.size > 0);
 
@@ -125,7 +156,6 @@ export async function onRequestPost(context) {
       if (
         key === "botcheck" ||
         key === "supporting_docs" ||
-        key === "pay_stub_doc" ||
         key === "voucher_doc"
       ) {
         continue;

@@ -338,9 +338,9 @@
         Management: <strong>Yoabra LLC</strong> &nbsp;|&nbsp; Contact: <strong>yoabrallc@gmail.com &bull; (856) 359-4714</strong>
       </div>
       <div class="terms-grid">
-        <div><strong>Monthly Rent</strong>$1,700 (due on the 1st)</div>
+        <div><strong>Monthly Rent</strong>$1,700 (due on the 1st of each month, first month due at signing)</div>
         <div><strong>Lease Term</strong>12 Months (Residential Only)</div>
-        <div><strong>Security Deposit</strong>$2,550 (1.5x rent, due at signing)</div>
+        <div><strong>Security Deposit</strong>$2,550 (1.5x rent, due at lease signing)</div>
         <div><strong>Utilities</strong>Tenant pays water, electric &amp; gas</div>
         <div><strong>Pets &amp; Smoking</strong>Not permitted</div>
         <div><strong>Renter's Insurance</strong>Required before move-in</div>
@@ -352,9 +352,9 @@
     <div class="stepper" id="stepper">
       <div class="step-pill active" data-step="1">1. Applicant</div>
       <div class="step-pill" data-step="2">2. Household</div>
-      <div class="step-pill" data-step="3">3. Housing</div>
-      <div class="step-pill" data-step="4">4. Income &amp; Docs</div>
-      <div class="step-pill" data-step="5">5. Screening &amp; Sign</div>
+      <div class="step-pill" data-step="3">3. Residences</div>
+      <div class="step-pill" data-step="4">4. Income</div>
+      <div class="step-pill" data-step="5">5. Background &amp; Sign</div>
     </div>
 
     <div class="draft-bar" id="draftBar">
@@ -371,10 +371,10 @@
         <!-- STEP 1: APPLICANT & MOVE-IN -->
         <div class="step-panel active" data-step="1">
           <h2>Applicant &amp; Move-In Details</h2>
-          <p class="step-desc">Each adult (18+) who will live at the property should submit a separate application with their own individual income and documents. Fields marked <span class="req">*</span> are required.</p>
+          <p class="step-desc">Each adult (18+) who will reside at the property must submit a separate application. Fields marked <span class="req">*</span> are required.</p>
 
           <div class="notice-box">
-            <strong>Equal Housing &amp; NJ Fair Chance Policy:</strong> All applicants are evaluated using the same written criteria without discrimination based on race, creed, color, national origin, ancestry, age, marital or familial status, sex, gender identity or expression, sexual orientation, disability, or lawful source of income (including Section 8, SRAP, or TRA vouchers). Credit and eviction screening (via TransUnion SmartMove) only happens after income review if moving forward as a finalist, and criminal background checks occur only after a conditional offer under New Jersey's Fair Chance in Housing Act.
+            <strong>Equal Housing &amp; NJ Fair Chance Policy:</strong> All applicants are evaluated using the same written criteria without discrimination based on race, creed, color, national origin, ancestry, age, marital or familial status, sex, gender identity or expression, sexual orientation, disability, or lawful source of income (including Housing Choice Vouchers / Section 8, SRAP, or TRA). Criminal history is never considered at this stage and is reviewed only after a conditional offer as permitted by New Jersey law.
           </div>
 
           <div class="grid-2">
@@ -383,7 +383,7 @@
               <input type="date" name="Desired_Move_In_Date" id="moveInDateInput" required />
             </div>
             <div class="field">
-              <label>Intended Use <span class="req">*</span></label>
+              <label>Intended Use of Premises <span class="req">*</span></label>
               <select name="Intended_Use" required>
                 <option value="Residential Only">Residential Only</option>
               </select>
@@ -396,42 +396,42 @@
               <input type="text" name="Applicant_Full_Name" id="fullNameInput" required />
             </div>
             <div class="field">
-              <label>Other Names Used <span class="hint-note">(If applicable)</span></label>
+              <label>Other Names / Aliases Used <span class="hint-note">(If applicable)</span></label>
               <input type="text" name="Other_Names_Used" />
             </div>
           </div>
 
           <div class="grid-3">
             <div class="field">
+              <label>Date of Birth <span class="req">*</span></label>
+              <input type="date" name="Date_of_Birth" required />
+            </div>
+            <div class="field">
               <label>Phone Number <span class="req">*</span></label>
-              <input type="tel" name="Phone" required />
+              <input type="tel" name="Phone" id="phoneInput" required />
             </div>
             <div class="field">
               <label>Email Address <span class="req">*</span></label>
-              <input type="email" name="Email" required />
-            </div>
-            <div class="field">
-              <label>Date of Birth <span class="req">*</span></label>
-              <input type="date" name="Date_of_Birth" required />
+              <input type="email" name="Email" id="emailInput" required />
             </div>
           </div>
 
           <div class="check-row" style="margin-top:8px;">
             <input type="checkbox" id="idConfirm" name="Valid_Photo_ID_Confirmed" value="Yes" required />
             <label for="idConfirm" style="font-weight:400;">
-              I confirm I have a valid government-issued photo ID and understand ID/credit/eviction checks via TransUnion SmartMove are only used if selected as a finalist. <span class="req">*</span>
+              I confirm I possess a valid government-issued photo ID and understand that ID verification and screening will be completed only if selected to move forward. <span class="req">*</span>
             </label>
           </div>
 
           <div class="btn-row">
-            <button type="button" class="btn-primary next-step-btn" data-current-step="1">Next: Household &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="1">Next: Household &amp; Vehicles &rarr;</button>
           </div>
         </div>
 
         <!-- STEP 2: OTHER OCCUPANTS & VEHICLES -->
         <div class="step-panel" data-step="2">
-          <h2>Household &amp; Vehicles <span class="hint-note">(Add if applicable)</span></h2>
-          <p class="step-desc">List co-occupants/household members (adults 18+ should also submit their own separate application) and any vehicles parked at the property.</p>
+          <h2>Other Occupants &amp; Vehicles</h2>
+          <p class="step-desc">List other household members (adults 18+ must submit a separate application) and any vehicles parked at the property.</p>
 
           <div id="occupantsContainer"></div>
           <button type="button" class="btn-outline" id="addOccupantBtn">+ Add Co-Applicant / Occupant</button>
@@ -439,71 +439,71 @@
           <hr style="border:none; border-top:1px solid #e5e7eb; margin:22px 0;" />
 
           <h3 style="font-size:1.05rem; margin:0 0 6px;">Vehicles <span class="hint-note">(Add if applicable)</span></h3>
-          <p class="step-desc" style="margin-bottom:12px;">Add any vehicle you plan to park at the property.</p>
+          <p class="step-desc" style="margin-bottom:12px;">Enter details for any vehicle parked at the property.</p>
           <div id="vehiclesContainer"></div>
           <button type="button" class="btn-outline" id="addVehicleBtn">+ Add Vehicle</button>
 
           <div class="btn-row">
             <button type="button" class="btn-secondary prev-step-btn" data-current-step="2">&larr; Back</button>
-            <button type="button" class="btn-primary next-step-btn" data-current-step="2">Next: Housing &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="2">Next: Residence History &rarr;</button>
           </div>
         </div>
 
-        <!-- STEP 3: CURRENT & PRIOR HOUSING -->
+        <!-- STEP 3: RESIDENCE HISTORY -->
         <div class="step-panel" data-step="3">
-          <h2>Current &amp; Prior Housing</h2>
-          <p class="step-desc" id="housingStepDesc">Fields marked <span class="req">*</span> are required; additional details and prior addresses can be added now or in Stage 2.</p>
+          <h2>Residence History</h2>
+          <p class="step-desc">Provide your current residence details. Previous addresses can also be added if applicable.</p>
 
           <div class="sub-box">
             <div class="sub-box-header">Current Residence</div>
             <div class="field">
-              <label>Street Address <span class="req housing-req">*</span></label>
-              <input type="text" name="Current_Address" class="housing-required-field" required />
+              <label>Street Address <span class="req">*</span></label>
+              <input type="text" name="Current_Address" required />
             </div>
             <div class="grid-3">
               <div class="field">
-                <label>City <span class="req housing-req">*</span></label>
-                <input type="text" name="Current_City" class="housing-required-field" required />
+                <label>City <span class="req">*</span></label>
+                <input type="text" name="Current_City" required />
               </div>
               <div class="field">
-                <label>State <span class="req housing-req">*</span></label>
-                <input type="text" name="Current_State" list="usStatesList" placeholder="e.g., NJ" class="housing-required-field" required />
+                <label>State <span class="req">*</span></label>
+                <input type="text" name="Current_State" list="usStatesList" placeholder="Select or type state" required />
               </div>
               <div class="field">
-                <label>ZIP Code <span class="req housing-req">*</span></label>
-                <input type="text" name="Current_ZIP" class="housing-required-field" required />
+                <label>ZIP Code <span class="req">*</span></label>
+                <input type="text" name="Current_ZIP" required />
               </div>
             </div>
             <div class="grid-3">
               <div class="field">
-                <label>Move-In Date <span class="req housing-req">*</span></label>
-                <input type="date" name="Current_Move_In_Date" class="housing-required-field" required />
+                <label>Move-In Date <span class="req">*</span></label>
+                <input type="date" name="Current_Move_In_Date" required />
               </div>
               <div class="field">
-                <label>Lease Expiration <span class="hint-note">(If applicable)</span></label>
+                <label>Lease Expiration Date <span class="hint-note">(If applicable)</span></label>
                 <input type="date" name="Current_Lease_Expiration" />
               </div>
               <div class="field">
-                <label>Current Monthly Rent / Payment ($) <span class="req housing-req">*</span></label>
-                <input type="number" name="Current_Monthly_Rent" class="housing-required-field" required />
+                <label>Monthly Rent / Payment ($) <span class="req">*</span></label>
+                <input type="number" name="Current_Monthly_Rent" required />
               </div>
             </div>
             <div class="grid-3">
               <div class="field">
-                <label>Landlord / Property Manager Name <span class="req housing-req">*</span></label>
-                <input type="text" name="Current_Landlord_Name" class="housing-required-field" required />
+                <label>Landlord / Property Manager Name <span class="req">*</span></label>
+                <input type="text" name="Current_Landlord_Name" required />
               </div>
               <div class="field">
-                <label>Landlord Phone <span class="hint-note">(Can be added now or in Stage 2)</span></label>
+                <label>Landlord Phone <span class="hint-note">(If applicable)</span></label>
                 <input type="tel" name="Current_Landlord_Phone" />
               </div>
               <div class="field">
-                <label>Landlord Email <span class="hint-note">(Can be added now or in Stage 2)</span></label>
+                <label>Landlord Email <span class="hint-note">(If applicable)</span></label>
                 <input type="email" name="Current_Landlord_Email" />
               </div>
             </div>
             <div class="field" style="margin-bottom:0;">
-              <label>Reason for Moving <span class="hint-note">(Can be added now or in Stage 2)</span></label>
+              <label>Reason for Leaving <span class="hint-note">(If applicable)</span></label>
               <input type="text" name="Current_Reason_For_Leaving" />
             </div>
           </div>
@@ -513,17 +513,17 @@
 
           <div class="btn-row">
             <button type="button" class="btn-secondary prev-step-btn" data-current-step="3">&larr; Back</button>
-            <button type="button" class="btn-primary next-step-btn" data-current-step="3">Next: Income &amp; Docs &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="3">Next: Employment &amp; Income &rarr;</button>
           </div>
         </div>
 
-        <!-- STEP 4: INDIVIDUAL INCOME, VOUCHERS & SUPPORTING DOCUMENTS -->
+        <!-- STEP 4: EMPLOYMENT, INCOME & SUPPORTING DOCUMENTS -->
         <div class="step-panel" data-step="4">
-          <h2>Individual Income &amp; Supporting Documents</h2>
-          <p class="step-desc" id="incomeStepDesc">Enter your individual income details and upload supporting documents (last two paystubs, 2025 W-2, valid photo ID photo, and most recent bank statement). You may redact SSNs and full bank account numbers before uploading.</p>
+          <h2>Employment, Income &amp; Supporting Documents</h2>
+          <p class="step-desc" id="incomeStepDesc">Provide your employment and monthly income details. Supporting documents can be attached here or when requested in a follow-up.</p>
 
           <div class="sub-box">
-            <div class="sub-box-header">Work &amp; Individual Income</div>
+            <div class="sub-box-header">Current Employment &amp; Income</div>
             <div class="grid-2">
               <div class="field">
                 <label>Employment Status <span class="req">*</span></label>
@@ -537,8 +537,8 @@
                 </select>
               </div>
               <div class="field">
-                <label>Individual Monthly Income ($) <span class="req">*</span></label>
-                <input type="number" name="Total_Monthly_Income" placeholder="Enter your individual monthly income" required />
+                <label>Total Monthly Income ($) <span class="req">*</span></label>
+                <input type="number" name="Total_Monthly_Income" required />
               </div>
             </div>
 
@@ -563,20 +563,20 @@
                 <input type="number" name="Gross_Monthly_Pay" id="grossPay" required />
               </div>
               <div class="field">
-                <label>Employer / Supervisor Phone <span class="hint-note">(Can be added now or in Stage 2)</span></label>
+                <label>Supervisor / Employer Phone <span class="hint-note">(If applicable)</span></label>
                 <input type="tel" name="Supervisor_Phone" />
               </div>
             </div>
 
             <div class="field">
-              <label>Supporting Documents — Select Multiple Files <span class="hint-note">(Last 2 paystubs, 2025 W-2, valid photo ID photo, latest bank statement — PDF, JPG, PNG, WEBP, max 5 MB each, up to 8 files)</span></label>
+              <label>Supporting Documents <span class="hint-note">(Select one or more files — PDF, JPG, PNG, WEBP, up to 5 MB each)</span></label>
               <input type="file" name="supporting_docs" accept=".pdf,.jpg,.jpeg,.png,.webp" multiple />
               <div class="hint-note" style="margin-top:4px;">You may redact SSNs and full bank account numbers before uploading.</div>
             </div>
 
             <div class="grid-2">
               <div class="field">
-                <label>Voucher / Assistance Program <span class="hint-note">(e.g., Section 8, SRAP, TRA)</span></label>
+                <label>Voucher / Assistance Program <span class="hint-note">(If applicable — e.g., Section 8, SRAP, TRA)</span></label>
                 <input type="text" name="Voucher_Program" />
               </div>
               <div class="field">
@@ -586,29 +586,24 @@
             </div>
 
             <div class="grid-3">
-              <div class="field">
+              <div class="field" style="margin-bottom:0;">
                 <label>Caseworker Name</label>
                 <input type="text" name="Caseworker_Name" />
               </div>
-              <div class="field">
+              <div class="field" style="margin-bottom:0;">
                 <label>Caseworker Phone</label>
                 <input type="tel" name="Caseworker_Phone" />
               </div>
-              <div class="field">
+              <div class="field" style="margin-bottom:0;">
                 <label>Caseworker Email</label>
                 <input type="email" name="Caseworker_Email" />
               </div>
-            </div>
-
-            <div class="field" style="margin-bottom:0;">
-              <label>Additional Pay Stub / Voucher Files <span class="hint-note">(Multiple files allowed — PDF, JPG, PNG, WEBP, max 5 MB each)</span></label>
-              <input type="file" name="voucher_doc" accept=".pdf,.jpg,.jpeg,.png,.webp" multiple />
             </div>
           </div>
 
           <details class="sub-box" id="extraDetailsBox">
             <summary style="font-weight:600; font-size:0.92rem; cursor:pointer; color:var(--primary);">
-              Additional Income Breakdown, Prior Employer, Reference &amp; Emergency Contact (Fill in what applies)
+              Additional Income Breakdown, Prior Employer, Reference &amp; Emergency Contact
             </summary>
             <div style="margin-top:14px;">
               <div class="grid-2">
@@ -675,13 +670,13 @@
 
           <div class="btn-row">
             <button type="button" class="btn-secondary prev-step-btn" data-current-step="4">&larr; Back</button>
-            <button type="button" class="btn-primary next-step-btn" data-current-step="4">Next: Screening &amp; Sign &rarr;</button>
+            <button type="button" class="btn-primary next-step-btn" data-current-step="4">Next: Disclosures &amp; Sign &rarr;</button>
           </div>
         </div>
 
-        <!-- STEP 5: RENTAL HISTORY & AUTHORIZATION -->
+        <!-- STEP 5: SCREENING QUESTIONS & AUTHORIZATION -->
         <div class="step-panel" data-step="5">
-          <h2>Rental History &amp; Authorization</h2>
+          <h2>Rental History Questions &amp; Authorization</h2>
           <p class="step-desc">Answer truthfully. A "Yes" answer does not automatically disqualify you and may be explained below.</p>
 
           <div class="sub-box">
@@ -723,9 +718,9 @@
             <p style="margin-top:0;"><strong>Applicant Certification &amp; Terms:</strong></p>
             <ul style="padding-left:18px; margin-bottom:12px;">
               <li><strong>Accuracy:</strong> I certify that all information provided is true and complete. Materially false or incomplete statements may be grounds for denial or lease termination.</li>
-              <li><strong>Verification &amp; Screening:</strong> I authorize Yoabra LLC to verify my provided income and housing info. Once income is verified, I understand I will receive an email invitation to complete credit and eviction screening (paid directly to the screening provider; NJ screening fee cap of $50 applies), and any criminal background check occurs only after a conditional offer under New Jersey's Fair Chance in Housing Act.</li>
+              <li><strong>Verification &amp; Screening:</strong> I authorize Yoabra LLC to verify my provided information. Screening and criminal background review (only after a conditional offer under New Jersey's Fair Chance in Housing Act) follow applicable law and written criteria.</li>
               <li><strong>$0 Pre-Application Fee:</strong> Submitting this application is free.</li>
-              <li><strong>Lease &amp; Move-In Terms:</strong> Submitting an application does not reserve the unit or create a lease. Possession requires an approved application, a signed lease, first month's rent ($1,700), full security deposit ($2,550), and renter's insurance; residential use only, tenant pays water, electric, and gas, and pets/smoking are governed by lease approval and property rules.</li>
+              <li><strong>Right to Accept/Reject &amp; No Possession Until Executed:</strong> Submitting this application does not create a lease or reserve the property. Possession requires an approved application, a signed written lease, first month's rent ($1,700), full security deposit ($2,550), and renter's insurance; residential use only, tenant pays water, electric, and gas, and pets/smoking are subject to lease terms and approval.</li>
             </ul>
 
             <div class="check-row">
@@ -758,7 +753,7 @@
         <h2 style="color:var(--success);">Application Received</h2>
         <p>Thank you for applying for <strong>431 Raritan Street, Camden, NJ 08105</strong>.</p>
         <p style="color:var(--muted); font-size:0.92rem;">
-          We will review your information and uploaded documents and follow up regarding next steps, including credit/eviction screening invitations once income is verified.
+          We will review your submission and follow up regarding next steps.
         </p>
         <a href="/" style="display:inline-block; margin-top:14px; color:var(--primary); font-weight:600;">Return to Home</a>
       </div>
@@ -767,7 +762,7 @@
 
   <script>
     (function () {
-      const DRAFT_KEY = "yoabra_apply_draft_v5";
+      const DRAFT_KEY = "yoabra_apply_draft_v7";
       const form = document.getElementById("rentalForm");
       const draftStatus = document.getElementById("draftStatus");
       const clearDraftBtn = document.getElementById("clearDraftBtn");
@@ -803,20 +798,6 @@
         parentIdInput.value = String(refId);
       }
 
-      function syncHousingRequirements() {
-        const requireHousing = !hasValidRef;
-        form.querySelectorAll(".housing-required-field").forEach(function (el) {
-          el.required = requireHousing;
-        });
-        form.querySelectorAll(".housing-req").forEach(function (star) {
-          star.style.display = requireHousing ? "inline" : "none";
-        });
-        const descEl = document.getElementById("housingStepDesc");
-        if (descEl && hasValidRef) {
-          descEl.textContent = "Because this is a linked follow-up submission, current housing fields are optional unless you want to update them.";
-        }
-      }
-
       function syncEmploymentRequirements() {
         const status = empStatusEl ? empStatusEl.value : "";
         const isEmployed = status === "Full-Time Employed" || status === "Part-Time Employed";
@@ -834,11 +815,51 @@
         });
       }
 
+      function ensureRepeatersForAnswers(answers) {
+        if (!answers || typeof answers !== "object") return;
+        let maxOcc = 0;
+        let maxVeh = 0;
+        let maxRes = 0;
+
+        for (const key of Object.keys(answers)) {
+          const occMatch = key.match(/^Occupant_(\d+)_/);
+          if (occMatch) maxOcc = Math.max(maxOcc, Number(occMatch[1]));
+
+          const vehMatch = key.match(/^Vehicle_(\d+)_/);
+          if (vehMatch) maxVeh = Math.max(maxVeh, Number(vehMatch[1]));
+
+          const resMatch = key.match(/^Prev_(\d+)_/);
+          if (resMatch) maxRes = Math.max(maxRes, Number(resMatch[1]));
+        }
+
+        while (occupantCount < maxOcc) addOccupant();
+        while (vehicleCount < maxVeh) addVehicle();
+        while (residenceCount < maxRes) addResidence();
+      }
+
+      function applyAnswerMap(answers, overwriteExisting) {
+        if (!answers || typeof answers !== "object") return;
+        ensureRepeatersForAnswers(answers);
+
+        for (const [name, val] of Object.entries(answers)) {
+          const el = form.elements.namedItem(name);
+          if (!el || el.type === "file" || el.type === "hidden" || el.name === "botcheck") continue;
+          if (el.type === "checkbox") {
+            if (overwriteExisting || !el.checked) {
+              el.checked = val === "Yes" || val === true;
+            }
+          } else if (overwriteExisting || !el.value) {
+            el.value = val;
+          }
+        }
+        syncEmploymentRequirements();
+      }
+
       async function hydrateFromReference() {
         if (!hasValidRef) {
           if (requestedStage === "full") {
             followupBanner.style.display = "block";
-            followupBanner.textContent = "Completing Follow-Up / Full Application details and supporting documents for 431 Raritan Street.";
+            followupBanner.textContent = "Follow-up mode — review or update your application details and attach any requested documents.";
           }
           return;
         }
@@ -846,16 +867,17 @@
           const res = await fetch(`/api/apply?ref=${encodeURIComponent(refId)}`);
           const data = await res.json();
           if (res.ok && data.ok && data.reference) {
-            const fullNameEl = document.getElementById("fullNameInput");
-            const moveInEl = document.getElementById("moveInDateInput");
-            if (fullNameEl && !fullNameEl.value && data.reference.applicant_name) {
-              fullNameEl.value = data.reference.applicant_name;
-            }
-            if (moveInEl && !moveInEl.value && data.reference.desired_move_in) {
-              moveInEl.value = data.reference.desired_move_in;
-            }
+            const combined = Object.assign({}, data.reference.answers || {}, {
+              Applicant_Full_Name: data.reference.applicant_name || "",
+              Email: data.reference.applicant_email || "",
+              Phone: data.reference.applicant_phone || "",
+              Desired_Move_In_Date: data.reference.desired_move_in || ""
+            });
+            applyAnswerMap(combined, true);
+            saveDraft();
+
             followupBanner.style.display = "block";
-            followupBanner.textContent = `Linked to Application #${data.reference.id} (${data.reference.applicant_name}) — enter your individual income details and attach supporting documents below.`;
+            followupBanner.textContent = `Pre-filled from Application #${data.reference.id} (${data.reference.applicant_name}) — update any details you need to change and attach any requested documents below.`;
           }
         } catch (err) {}
       }
@@ -1029,7 +1051,6 @@
         try {
           const raw = localStorage.getItem(DRAFT_KEY);
           if (!raw) {
-            syncHousingRequirements();
             syncEmploymentRequirements();
             return;
           }
@@ -1044,19 +1065,8 @@
           for (let i = 0; i < targetResidences; i++) addResidence();
 
           if (draft.values && typeof draft.values === "object") {
-            for (const [name, val] of Object.entries(draft.values)) {
-              const el = form.elements.namedItem(name);
-              if (!el || el.type === "file") continue;
-              if (el.type === "checkbox") {
-                el.checked = Boolean(val);
-              } else if (!el.value) {
-                el.value = val;
-              }
-            }
+            applyAnswerMap(draft.values, false);
           }
-
-          syncHousingRequirements();
-          syncEmploymentRequirements();
 
           if (draft.step && draft.step >= 1 && draft.step <= 5) {
             showStep(draft.step, false);
@@ -1065,7 +1075,6 @@
             draftStatus.textContent = "Restored saved draft from " + draft.savedAt + ".";
           }
         } catch (err) {
-          syncHousingRequirements();
           syncEmploymentRequirements();
         }
       }
@@ -1084,7 +1093,6 @@
         occupantCount = 0;
         vehicleCount = 0;
         residenceCount = 0;
-        syncHousingRequirements();
         syncEmploymentRequirements();
         showStep(1, false);
         if (draftStatus) draftStatus.textContent = "Saved draft cleared.";

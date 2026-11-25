@@ -300,12 +300,15 @@
               : "";
 
             const fileKeys = (app.file_key || "").split(",").map(s => s.trim()).filter(Boolean);
-            const attachmentButtons = fileKeys.map(function (fk) {
-              const label = fk.includes("/pay-stubs/") ? "View Pay Stub / Income Proof" :
-                            fk.includes("/vouchers/") ? "View Voucher Documentation" :
-                            "View Attachment";
+            const attachmentButtons = fileKeys.map(function (fk, idx) {
+              const shortName = fk.split("/").pop() || `File ${idx + 1}`;
+              const prefixLabel = fk.includes("/supporting-docs/")
+                ? "Document"
+                : fk.includes("/vouchers/")
+                  ? "Voucher"
+                  : "Attachment";
               const href = `/api/admin?download=${encodeURIComponent(fk)}`;
-              return `<a class="btn btn-outline" href="${href}" target="_blank" rel="noopener">${escapeHtml(label)}</a>`;
+              return `<a class="btn btn-outline" href="${href}" target="_blank" rel="noopener">${escapeHtml(`${prefixLabel}: ${shortName}`)}</a>`;
             }).join("");
 
             const submittedDate = new Date(app.submitted_at).toLocaleString();

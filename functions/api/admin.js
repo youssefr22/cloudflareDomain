@@ -1,7 +1,8 @@
 const TEAM_DOMAIN = "https://yoabra.cloudflareaccess.com";
 const ALLOWED_EMAILS = new Set([
   "yoabrallc@gmail.com",
-  "rafeh.youssef@gmail.com"
+  "rafeh.youssef@gmail.com",
+  "youssef@yoabra.com"
 ]);
 
 let cachedKeys = null;
